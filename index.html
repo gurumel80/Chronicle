@@ -573,14 +573,22 @@ When you introduce a named character, include their gender in the response so it
 Reply ONLY in valid JSON, no preamble or markdown fences.`;
 
 async function ask(prompt){
-  const r=await fetch('/api/generate',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt,system:SYS})
-  });
-  if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err?.error||`API error ${r.status}`);}
-  const data=await r.json();
-  const raw=data.text||'{}';
-  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+  try{
+    const r=await fetch('/api/generate',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt,system:SYS})
+    });
+    const data=await r.json();
+    if(!r.ok){
+      addEntry(`API Error ${r.status}: ${data.error||'unknown'}`);
+      throw new Error(data.error||r.status);
+    }
+    const raw=data.text||'{}';
+    return JSON.parse(raw.replace(/```json|```/g,'').trim());
+  }catch(e){
+    addEntry(`Error: ${e.message}`);
+    throw e;
+  }
 }
 
 function ctx(){
