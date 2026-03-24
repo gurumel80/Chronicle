@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chronicle — The Long Game of Nations</title>
+<meta name="description" content="Name a nation. Watch centuries unfold. Every game is a unique history — AI-generated events, discoveries, disasters and decisions that actually matter.">
+<meta property="og:title" content="Chronicle — The Long Game of Nations">
+<meta property="og:description" content="Name a nation. Watch centuries unfold. Every game tells a different story.">
+<meta property="og:image" content="https://raw.githubusercontent.com/gurumel80/Chronicle/main/Chronicle_crown.png">
+<meta property="og:url" content="https://chronicle-world.vercel.app">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/gurumel80/Chronicle/main/Chronicle_crown.png">
+<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#b8860b;--gold-light:#d4a017;--blood:#7a1f1f;--faded:#8a7a60;--teal:#4a8a8a;--parchment:#f2e8d0;--glory:#c8a84b;--ink:#0d0b08;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── STICKY BAR ── */
+#sticky{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(10,8,4,0.97);padding:0.4rem 1rem 0.5rem;border-bottom:1px solid rgba(184,134,11,0.18);display:none;backdrop-filter:blur(4px);}
+.si{max-width:780px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:0.5rem;}
+.si-left{flex:1;min-width:0;}
+.sn{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);opacity:0.6;margin-bottom:0.28rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sr{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.ss{display:flex;align-items:center;gap:0.2rem;font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.06em;text-transform:uppercase;}
+.sl{color:var(--faded)}.sv{color:var(--gold);min-width:1.4rem;font-weight:600;}
+.sp{display:flex;gap:1px;}
+.spip{width:5px;height:4px;background:rgba(184,134,11,0.12);transition:background 0.4s;}
+.spip.on{background:var(--gold);}.spip.on.lo{background:var(--blood);}
+.btn-overview-sticky{flex-shrink:0;padding:0.3rem 0.7rem;background:transparent;border:1px solid rgba(184,134,11,0.3);color:var(--faded);font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.btn-overview-sticky:hover{border-color:rgba(184,134,11,0.6);color:var(--gold);}
+
+/* ── LAYOUT ── */
+#app{max-width:780px;margin:0 auto;padding:2rem 1.5rem 6rem;}
+.mast{text-align:center;padding:3rem 0 2rem;border-bottom:1px solid rgba(184,134,11,0.28);margin-bottom:2rem;}
+.mast h1{font-family:'Cinzel Decorative',serif;font-size:clamp(1.8rem,5vw,2.8rem);color:var(--gold);letter-spacing:0.08em;text-shadow:0 0 40px rgba(184,134,11,0.35);}
+.mast p{font-style:italic;color:var(--faded);margin-top:0.5rem;}
+
+/* ── SETUP ── */
+#setup{animation:fi 1s ease;}
+.card{background:linear-gradient(135deg,rgba(26,18,8,0.9),rgba(20,14,6,0.95));border:1px solid rgba(184,134,11,0.22);padding:2.5rem;margin-bottom:1.5rem;position:relative;}
+.card::before{content:'';position:absolute;top:6px;left:6px;right:6px;bottom:6px;border:1px solid rgba(184,134,11,0.06);pointer-events:none;}
+.card h2{font-family:'Cinzel',serif;color:var(--gold);font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.2rem;opacity:0.65;}
+.fg{margin-bottom:1.1rem;}
+.fg label{display:block;font-size:0.82rem;color:var(--faded);margin-bottom:0.32rem;font-style:italic;}
+.fg input,.fg select{width:100%;background:rgba(242,232,208,0.05);border:1px solid rgba(184,134,11,0.18);padding:0.58rem 0.8rem;color:var(--parchment);font-family:'IM Fell English',serif;font-size:1rem;outline:none;transition:border-color 0.2s,background 0.2s;}
+.fg input:focus,.fg select:focus{border-color:rgba(184,134,11,0.48);background:rgba(242,232,208,0.08);}
+.fg select option{background:#1a1208;}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.btnp{width:100%;padding:1rem;background:linear-gradient(135deg,rgba(184,134,11,0.12),rgba(184,134,11,0.06));border:1px solid rgba(184,134,11,0.38);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.85rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;}
+.btnp:hover:not(:disabled){background:linear-gradient(135deg,rgba(184,134,11,0.2),rgba(184,134,11,0.12));border-color:rgba(184,134,11,0.65);}
+.btnp:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* ── GAME ── */
+#game{display:none;animation:fi 1s ease;}
+.nh{text-align:center;margin-bottom:1.2rem;}
+.nn{font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--gold);}
+.era{font-style:italic;color:var(--faded);font-size:0.85rem;margin-top:0.2rem;}
+#is{margin-bottom:1.1rem;}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:0.45rem;margin-bottom:0.45rem;}
+.sb{background:rgba(26,18,8,0.8);border:1px solid rgba(184,134,11,0.12);padding:0.55rem 0.35rem;text-align:center;transition:border-color 0.5s;}
+.sb.ch{border-color:rgba(184,134,11,0.52);animation:pu 1s ease;}
+@keyframes pu{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(184,134,11,0.22)}}
+.sl2{font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--faded);margin-bottom:0.2rem;}
+.sv2{font-family:'Cinzel',serif;font-size:0.98rem;color:var(--gold);}
+.sv2.danger{color:var(--blood);}
+.pr{display:flex;justify-content:center;gap:2px;margin-top:0.2rem;}
+.pip{width:5px;height:3px;background:rgba(184,134,11,0.1);transition:background 0.5s;}
+.pip.on{background:var(--gold);}.pip.on.danger{background:var(--blood);}
+.mr{display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;margin-bottom:1rem;}
+.mb{background:rgba(26,18,8,0.6);border:1px solid rgba(184,134,11,0.1);padding:0.65rem 0.85rem;}
+.mt{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--faded);margin-bottom:0.45rem;}
+.cr2{display:flex;flex-wrap:wrap;gap:0.28rem;min-height:1rem;}
+.rch{font-size:0.75rem;padding:0.18rem 0.5rem;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.12);color:var(--faded);}
+.rch.cur{border-color:rgba(184,134,11,0.38);color:var(--gold-light);}
+.dch{font-family:'Cinzel',serif;font-size:0.53rem;letter-spacing:0.09em;text-transform:uppercase;padding:0.18rem 0.48rem;background:rgba(74,138,138,0.1);border:1px solid rgba(74,138,138,0.18);color:#9ab;animation:fi 0.6s ease;}
+.orn{text-align:center;color:rgba(184,134,11,0.22);font-size:1rem;margin:1.1rem 0;letter-spacing:0.4rem;}
+
+/* overview button in-page */
+.overview-bar{text-align:right;margin-bottom:0.6rem;}
+.btn-ov{padding:0.4rem 1rem;background:transparent;border:1px solid rgba(184,134,11,0.22);color:var(--faded);font-family:'Cinzel',serif;font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.25s;}
+.btn-ov:hover{border-color:rgba(184,134,11,0.5);color:var(--gold);}
+
+/* ── CHRONICLE ── */
+.clog{margin-bottom:1.4rem;}
+.ce{padding:1.3rem 1.3rem 1.1rem;margin-bottom:0.85rem;background:linear-gradient(135deg,rgba(26,18,8,0.85),rgba(20,14,6,0.9));border-left:2px solid rgba(184,134,11,0.22);animation:si 0.6s ease;}
+.ce.cr{border-left-color:var(--blood);}.ce.major{border-left-color:var(--gold);border-left-width:3px;}.ce.dyn{border-left-color:var(--teal);border-left-width:3px;}.ce.glory{border-left-color:var(--glory);border-left-width:3px;}
+@keyframes si{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.ey{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--gold);opacity:0.62;margin-bottom:0.4rem;text-transform:uppercase;}
+.ex{font-size:1.15rem;line-height:1.86;color:var(--parchment);opacity:0.9;}
+@media(max-width:600px){.ex{font-size:1.25rem;line-height:1.92;}}
+.ex em{color:var(--gold-light);font-style:italic;}
+.sc{display:flex;gap:0.38rem;flex-wrap:wrap;margin-top:0.65rem;}
+.chip{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.07em;padding:0.16rem 0.42rem;text-transform:uppercase;}
+.chip.up{background:rgba(100,160,100,0.1);color:#8fbc8f;border:1px solid rgba(100,160,100,0.18);}
+.chip.dn{background:rgba(160,80,80,0.1);color:#bc8f8f;border:1px solid rgba(160,80,80,0.18);}
+
+/* ── CHOICE ── */
+.cm{background:linear-gradient(135deg,rgba(122,31,31,0.08),rgba(26,18,8,0.95));border:1px solid rgba(122,31,31,0.28);padding:1.7rem;margin-bottom:1.4rem;animation:fi 0.8s ease;position:relative;}
+.cm::before{content:'⚑';position:absolute;top:-0.52rem;left:50%;transform:translateX(-50%);color:var(--blood);font-size:1.1rem;background:var(--ink);padding:0 0.5rem;}
+.ct{font-family:'Cinzel',serif;font-size:0.63rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--blood);margin-bottom:0.42rem;opacity:0.78;}
+.cs{font-style:italic;color:var(--parchment);line-height:1.7;margin-bottom:1.2rem;opacity:0.88;}
+.co{display:flex;flex-direction:column;gap:0.5rem;}
+.copt{text-align:left;padding:0.82rem 1.1rem;background:rgba(242,232,208,0.04);border:1px solid rgba(184,134,11,0.17);color:var(--parchment);font-family:'IM Fell English',serif;font-size:0.95rem;cursor:pointer;transition:all 0.22s;line-height:1.5;}
+.copt:hover:not(:disabled){background:rgba(184,134,11,0.08);border-color:rgba(184,134,11,0.4);padding-left:1.5rem;}
+.copt:disabled{opacity:0.4;cursor:not-allowed;}
+.cnb{text-align:center;margin-top:0.8rem;}
+.btnc{padding:0.68rem 2.6rem;background:transparent;border:1px solid rgba(184,134,11,0.26);color:var(--faded);font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;}
+.btnc:hover:not(:disabled){border-color:rgba(184,134,11,0.55);color:var(--gold);}
+.btnc:disabled{opacity:0.3;cursor:not-allowed;}
+.lr{text-align:center;padding:1.7rem;color:var(--faded);font-style:italic;font-size:0.88rem;animation:lp 1.5s ease-in-out infinite;}
+@keyframes lp{0%,100%{opacity:0.3}50%{opacity:0.8}}
+
+/* ── END SCREEN ── */
+#end{display:none;animation:fi 1.5s ease;}
+.end-banner{text-align:center;padding:3rem 2rem 2rem;}
+.et2{font-family:'Cinzel Decorative',serif;font-size:1.9rem;margin-bottom:1rem;}
+.et2.fallen{color:var(--blood);text-shadow:0 0 28px rgba(122,31,31,0.32);}
+.et2.golden{color:var(--glory);text-shadow:0 0 28px rgba(200,168,75,0.4);}
+.ee{font-style:italic;color:var(--faded);line-height:1.9;max-width:520px;margin:0 auto 2rem;font-size:1.15rem;}
+.sum-block{background:linear-gradient(135deg,rgba(26,18,8,0.9),rgba(20,14,6,0.95));border:1px solid rgba(184,134,11,0.2);padding:2rem 2.5rem;margin:0 0 1.5rem;}
+.sum-sec{margin-bottom:1.5rem;}
+.sum-t{font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);opacity:0.65;margin-bottom:0.6rem;}
+.sum-p{font-size:1.05rem;line-height:1.85;color:var(--parchment);opacity:0.85;}
+.sum-p em{color:var(--gold-light);font-style:italic;}
+.rline,.dline{display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.5rem;}
+.rsum{font-size:0.78rem;padding:0.2rem 0.6rem;background:rgba(184,134,11,0.06);border:1px solid rgba(184,134,11,0.14);color:var(--faded);}
+.end-btns{text-align:center;padding-bottom:3rem;display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;}
+
+/* ── OVERVIEW POPUP ── */
+#popup-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.85);z-index:800;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
+#popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(680px,94vw);max-height:85vh;background:linear-gradient(135deg,rgba(22,15,6,0.99),rgba(16,11,4,0.99));border:1px solid rgba(184,134,11,0.3);z-index:900;display:flex;flex-direction:column;animation:popIn 0.25s ease;}
+@keyframes popIn{from{opacity:0;transform:translate(-50%,-52%)}to{opacity:1;transform:translate(-50%,-50%)}}
+.pop-head{padding:1.2rem 1.5rem 0.9rem;border-bottom:1px solid rgba(184,134,11,0.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.pop-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);opacity:0.7;}
+.pop-close{background:none;border:none;color:var(--faded);font-size:1.2rem;cursor:pointer;padding:0.2rem 0.4rem;transition:color 0.2s;line-height:1;}
+.pop-close:hover{color:var(--parchment);}
+.pop-body{padding:1.5rem;overflow-y:auto;flex:1;}
+.pop-sec{margin-bottom:1.4rem;}
+.pop-sec-t{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);opacity:0.55;margin-bottom:0.7rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(184,134,11,0.1);}
+.pop-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;}
+.pop-stat{background:rgba(26,18,8,0.8);border:1px solid rgba(184,134,11,0.12);padding:0.6rem 0.4rem;text-align:center;}
+.pop-stat-lbl{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faded);margin-bottom:0.2rem;}
+.pop-stat-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);}
+.pop-stat-val.danger{color:var(--blood);}
+.pop-pip-row{display:flex;justify-content:center;gap:2px;margin-top:0.2rem;}
+.pop-pip{width:5px;height:3px;background:rgba(184,134,11,0.1);}
+.pop-pip.on{background:var(--gold);}.pop-pip.on.danger{background:var(--blood);}
+.pop-chips{display:flex;flex-wrap:wrap;gap:0.3rem;}
+.pop-rch{font-size:0.78rem;padding:0.2rem 0.55rem;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.14);color:var(--faded);}
+.pop-rch.cur{border-color:rgba(184,134,11,0.4);color:var(--gold-light);}
+.pop-dch{font-family:'Cinzel',serif;font-size:0.53rem;letter-spacing:0.09em;text-transform:uppercase;padding:0.18rem 0.48rem;background:rgba(74,138,138,0.1);border:1px solid rgba(74,138,138,0.18);color:#9ab;}
+.pop-ally{font-size:0.78rem;padding:0.2rem 0.55rem;background:rgba(74,138,138,0.06);border:1px solid rgba(74,138,138,0.14);color:#9ab;}
+.pop-emy{font-size:0.78rem;padding:0.2rem 0.55rem;background:rgba(122,31,31,0.08);border:1px solid rgba(122,31,31,0.18);color:#bc8f8f;}
+
+/* ── HALL OF RECORDS ── */
+.hall-block{background:linear-gradient(135deg,rgba(26,18,8,0.88),rgba(20,14,6,0.92));border:1px solid rgba(184,134,11,0.18);padding:1.5rem 2rem;margin-bottom:1.5rem;}
+.hall-title{font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);opacity:0.65;margin-bottom:1rem;text-align:center;}
+.hall-empty{font-style:italic;color:var(--faded);font-size:0.88rem;text-align:center;padding:0.5rem 0;}
+.hall-row{display:flex;align-items:baseline;gap:0.7rem;padding:0.55rem 0;border-bottom:1px solid rgba(184,134,11,0.08);}
+.hall-row:last-child{border-bottom:none;}
+.hall-rank{font-family:'Cinzel',serif;font-size:0.6rem;color:var(--gold);opacity:0.45;min-width:1.2rem;}
+.hall-name{font-family:'Cinzel',serif;font-size:0.82rem;color:var(--parchment);flex:1;}
+.hall-name.golden{color:var(--glory);}
+.hall-meta{font-size:0.75rem;color:var(--faded);font-style:italic;}
+.hall-score{font-family:'Cinzel',serif;font-size:0.75rem;color:var(--gold);opacity:0.7;min-width:3rem;text-align:right;}
+
+/* ── END SCREEN TABS ── */
+.end-tabs{display:flex;gap:0;border-bottom:1px solid rgba(184,134,11,0.18);margin-bottom:1.5rem;}
+.etab{flex:1;padding:0.7rem;background:transparent;border:none;border-bottom:2px solid transparent;color:var(--faded);font-family:'Cinzel',serif;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-bottom:-1px;}
+.etab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.etab:hover:not(.active){color:var(--parchment);}
+.etab-panel{display:none;}.etab-panel.active{display:block;}
+
+/* ── RECORD MODAL ── */
+#record-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.88);z-index:800;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
+#record-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(620px,92vw);max-height:88vh;background:linear-gradient(160deg,rgba(22,15,6,0.99),rgba(13,11,8,0.99));border:1px solid rgba(184,134,11,0.28);z-index:900;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
+.rec-head{padding:1.4rem 1.5rem 1rem;border-bottom:1px solid rgba(184,134,11,0.12);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
+.rec-head-left{flex:1;}
+.rec-nation{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);}
+.rec-sub{font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;margin-top:0.2rem;}
+.rec-close{background:none;border:none;color:var(--faded);font-size:1.3rem;cursor:pointer;padding:0.2rem 0.4rem;transition:color 0.2s;line-height:1;flex-shrink:0;}
+.rec-close:hover{color:var(--parchment);}
+.rec-body{padding:1.5rem;overflow-y:auto;flex:1;}
+.rec-epitaph{font-style:italic;color:var(--faded);font-size:0.92rem;line-height:1.75;margin-bottom:1.2rem;padding-bottom:1rem;border-bottom:1px solid rgba(184,134,11,0.1);}
+.rec-section{margin-bottom:1.2rem;}
+.rec-sec-t{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);opacity:0.55;margin-bottom:0.5rem;}
+.rec-years{font-size:0.82rem;color:var(--faded);font-style:italic;}
+.rec-summary{font-size:0.95rem;line-height:1.8;color:var(--parchment);opacity:0.85;}
+.rec-summary em{color:var(--gold-light);font-style:italic;}
+#htp-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.88);z-index:800;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
+#htp-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(620px,92vw);max-height:88vh;background:linear-gradient(160deg,rgba(22,15,6,0.99),rgba(13,11,8,0.99));border:1px solid rgba(184,134,11,0.28);z-index:900;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
+.htp-head{padding:1.4rem 1.5rem 1rem;border-bottom:1px solid rgba(184,134,11,0.12);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.htp-head-title{font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);opacity:0.75;}
+.htp-close{background:none;border:none;color:var(--faded);font-size:1.3rem;cursor:pointer;padding:0.2rem 0.4rem;transition:color 0.2s;line-height:1;}
+.htp-close:hover{color:var(--parchment);}
+.htp-body{padding:1.8rem 2rem;overflow-y:auto;flex:1;}
+.htp-section{margin-bottom:1.6rem;}
+.htp-section:last-child{margin-bottom:0;}
+.htp-icon{font-size:1.4rem;margin-bottom:0.5rem;display:block;}
+.htp-heading{font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);opacity:0.8;margin-bottom:0.5rem;}
+.htp-text{font-size:1rem;line-height:1.82;color:var(--parchment);opacity:0.85;}
+.htp-text em{color:var(--gold-light);font-style:italic;}
+.htp-divider{border:none;border-top:1px solid rgba(184,134,11,0.1);margin:1.4rem 0;}
+.htp-footer{padding:1rem 1.5rem 1.2rem;border-top:1px solid rgba(184,134,11,0.1);text-align:center;flex-shrink:0;}
+
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@media(max-width:520px){.r2,.mr{grid-template-columns:1fr}.sr{gap:0.25rem}.pop-stats-grid{grid-template-columns:repeat(4,1fr)}.htp-body{padding:1.2rem 1.2rem;}}
+</style>
+</head>
+<body>
+
+<!-- STICKY -->
+<div id="sticky">
+  <div class="si">
+    <div class="si-left">
+      <div class="sn" id="slbl"></div>
+      <div class="sr" id="srow"></div>
+    </div>
+    <button class="btn-overview-sticky" onclick="openPopup()">Nation Overview</button>
+  </div>
+</div>
+
+<!-- OVERVIEW POPUP -->
+<div id="popup-overlay" onclick="closePopup(event)">
+  <div id="popup">
+    <div class="pop-head">
+      <div class="pop-title" id="pop-nation-title">Nation Overview</div>
+      <button class="pop-close" onclick="closePopup()">✕</button>
+    </div>
+    <div class="pop-body">
+      <div class="pop-sec">
+        <div class="pop-sec-t">Stats</div>
+        <div class="pop-stats-grid" id="pop-stats"></div>
+      </div>
+      <div class="pop-sec">
+        <div class="pop-sec-t">Line of Rulers</div>
+        <div class="pop-chips" id="pop-rulers"></div>
+      </div>
+      <div class="pop-sec" id="pop-disc-sec">
+        <div class="pop-sec-t">Discoveries &amp; Achievements</div>
+        <div class="pop-chips" id="pop-discs"></div>
+      </div>
+      <div class="pop-sec" id="pop-ally-sec">
+        <div class="pop-sec-t">Allies &amp; Enemies</div>
+        <div class="pop-chips" id="pop-allies"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RECORD MODAL -->
+<div id="record-overlay" onclick="closeRecord(event)">
+  <div id="record-modal">
+    <div class="rec-head">
+      <div class="rec-head-left">
+        <div class="rec-nation" id="rec-title"></div>
+        <div class="rec-sub" id="rec-subtitle"></div>
+        <div class="rec-years" id="rec-years" style="margin-top:0.3rem;"></div>
+      </div>
+      <button class="rec-close" onclick="closeRecord()">✕</button>
+    </div>
+    <div class="rec-body">
+      <div class="rec-epitaph" id="rec-epitaph"></div>
+      <div class="rec-section">
+        <div class="rec-sec-t">According to Jeremiah the Historian</div>
+        <div class="rec-summary" id="rec-summary"></div>
+      </div>
+      <div class="rec-section">
+        <div class="rec-sec-t">Known Rulers</div>
+        <div class="rline" id="rec-rulers"></div>
+      </div>
+      <div class="rec-section">
+        <div class="rec-sec-t">Recovered Knowledge</div>
+        <div class="dline" id="rec-discs"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW TO PLAY MODAL -->
+<div id="htp-overlay" onclick="closeHtp(event)">
+  <div id="htp-modal">
+    <div class="htp-head">
+      <div class="htp-head-title">How to Play</div>
+      <button class="htp-close" onclick="closeHtp()">✕</button>
+    </div>
+    <div class="htp-body">
+      <div class="htp-section">
+        <span class="htp-icon">✦</span>
+        <div class="htp-heading">You are the Chronicle</div>
+        <div class="htp-text">Name your nation and its first ruler. The Chronicle determines everything else — the landscape, the people, the culture they carry. Every game begins somewhere different. A volcanic archipelago. A fog-wreathed coast. A canyon land where water is power.</div>
+      </div>
+      <hr class="htp-divider">
+      <div class="htp-section">
+        <span class="htp-icon">⟳</span>
+        <div class="htp-heading">Let the Years Pass</div>
+        <div class="htp-text">Each time you press the button, decades turn. Events unfold — wars begin and end, rulers die and are replaced, discoveries are made, disasters strike. Your eight stats shift quietly in the background. <em>Stability. Legitimacy. Military. Culture.</em> Watch them. They matter more than they seem.</div>
+      </div>
+      <hr class="htp-divider">
+      <div class="htp-section">
+        <span class="htp-icon">⚑</span>
+        <div class="htp-heading">Moments of Decision</div>
+        <div class="htp-text">Every so often, history pauses and asks what your nation does. There is rarely a right answer. The merciful choice and the ruthless choice both have costs. Sometimes you can choose to do nothing — but inaction is never free.</div>
+      </div>
+      <hr class="htp-divider">
+      <div class="htp-section">
+        <span class="htp-icon">♛</span>
+        <div class="htp-heading">Dynasties Rise and Fall</div>
+        <div class="htp-text">Rulers die. Their heirs may be worthy or disastrous. If stability crumbles and legitimacy fails, usurpers emerge. The dynasty may change entirely — but the nation endures, carrying all its history forward.</div>
+      </div>
+      <hr class="htp-divider">
+      <div class="htp-section">
+        <span class="htp-icon">◈</span>
+        <div class="htp-heading">How It Ends</div>
+        <div class="htp-text">Most nations fall eventually. Conquest. Collapse. A dynasty that destroys itself from within. But tend your nation well across generations and something rare becomes possible — <em>a golden age</em>. A moment when everything your people built becomes something worth remembering.</div>
+      </div>
+    </div>
+    <div class="htp-footer">
+      <button class="btnp" style="max-width:220px;margin:0 auto;" onclick="closeHtp()">Begin the Chronicle</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="mast">
+    <img src="https://raw.githubusercontent.com/gurumel80/Chronicle/main/Chronicle_crown.png" alt="Chronicle" style="width:min(280px,70vw);margin-bottom:1rem;opacity:0.92;">
+    <p>The Long Game of Nations</p>
+  </div>
+
+  <!-- SETUP -->
+  <div id="setup">
+    <div class="card">
+      <h2>Found a Nation</h2>
+      <p style="font-style:italic;color:var(--faded);font-size:0.88rem;line-height:1.7;margin-bottom:1.2rem;">Name your nation and its first ruler. The Chronicle will determine the rest — the land, the people, the age you inherit.</p>
+      <div class="r2">
+        <div class="fg">
+          <label>Name of your Nation</label>
+          <div style="display:flex;gap:0.4rem;">
+            <input type="text" id="inat" placeholder="e.g. Valdremor" maxlength="40" style="flex:1">
+            <button type="button" onclick="randomNation()" title="Random name" style="flex-shrink:0;padding:0 0.75rem;background:rgba(184,134,11,0.08);border:1px solid rgba(184,134,11,0.25);color:var(--faded);font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--faded)'">⚄</button>
+          </div>
+        </div>
+        <div class="fg">
+          <label>Name of First Ruler</label>
+          <div style="display:flex;gap:0.4rem;">
+            <input type="text" id="irul" placeholder="e.g. Edric the Stern" maxlength="40" style="flex:1">
+            <button type="button" onclick="randomRuler()" title="Random name" style="flex-shrink:0;padding:0 0.75rem;background:rgba(184,134,11,0.08);border:1px solid rgba(184,134,11,0.25);color:var(--faded);font-size:1rem;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--faded)'">⚄</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btnp" onclick="beginGame()" style="margin-bottom:0.6rem">Begin the Chronicle</button>
+    <div style="text-align:center;margin-bottom:1rem;">
+      <button onclick="openHtp()" style="background:none;border:none;color:var(--faded);font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;padding:0.4rem;transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--faded)'">◈ How to Play</button>
+    </div>
+    <div class="hall-block" id="hall-setup">
+      <div class="hall-title">Hall of Records</div>
+      <div id="hall-setup-rows"><div class="hall-empty">No chronicles recorded yet.</div></div>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game">
+    <div class="nh"><div class="nn" id="dnn"></div><div class="era" id="der"></div></div>
+    <div id="is"><div class="sg" id="sg1"></div><div class="sg" id="sg2"></div></div>
+    <div class="mr">
+      <div class="mb"><div class="mt">Line of Rulers</div><div class="cr2" id="rl"></div></div>
+      <div class="mb"><div class="mt">Discoveries &amp; Achievements</div><div class="cr2" id="db"></div></div>
+    </div>
+    <div class="overview-bar"><button class="btn-ov" onclick="openPopup()">◈ Nation Overview</button></div>
+    <div class="orn">— ✦ —</div>
+    <div class="clog" id="log"></div>
+    <div id="ca"></div>
+    <div class="cnb"><button class="btnc" id="contbtn" onclick="nextBeat()" disabled>Let the Years Pass →</button></div>
+  </div>
+
+  <!-- END -->
+  <div id="end">
+    <div class="end-banner">
+      <div class="et2" id="end-title">The Nation Falls</div>
+      <div class="ee" id="end-epi"></div>
+      <button class="btn-ov" onclick="openPopup()" style="margin:0 auto;display:inline-block">◈ Nation Overview</button>
+    </div>
+    <div class="end-tabs">
+      <button class="etab active" onclick="switchTab('chronicle')">The Chronicle</button>
+      <button class="etab" onclick="switchTab('records')">Hall of Records</button>
+    </div>
+    <div class="etab-panel active" id="tab-chronicle">
+      <div class="sum-block">
+        <div class="sum-sec" style="border-bottom:1px solid rgba(184,134,11,0.1);padding-bottom:1.4rem;margin-bottom:1.4rem;">
+          <div class="sum-t">According to Jeremiah the Historian</div>
+          <div class="sum-p" id="sum-history" style="font-size:1.08rem;line-height:1.88;"></div>
+          <div style="margin-top:1rem;font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--faded);opacity:0.45;text-align:right;">— Jeremiah, Series Consultant</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div class="sum-sec" style="margin-bottom:0">
+            <div class="sum-t">Known Rulers</div>
+            <div class="rline" id="sum-rulers"></div>
+          </div>
+          <div class="sum-sec" style="margin-bottom:0" id="sum-disc-sec">
+            <div class="sum-t">Recovered Knowledge</div>
+            <div class="dline" id="sum-discs"></div>
+          </div>
+        </div>
+        <div class="sum-sec" style="margin-top:1rem;margin-bottom:0">
+          <div class="sum-t">Duration</div>
+          <div class="sum-p" id="sum-years" style="font-size:0.88rem;opacity:0.65;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="etab-panel" id="tab-records">
+      <div class="hall-block">
+        <div class="hall-title">Hall of Records</div>
+        <div id="hall-end-rows"></div>
+      </div>
+    </div>
+    <div class="end-btns">
+      <button class="btnp" style="max-width:260px" onclick="location.reload()">Begin Again</button>
+      <a href="https://ko-fi.com/chronicle_game" target="_blank" style="max-width:260px;display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:1rem;background:transparent;border:1px solid rgba(184,134,11,0.25);color:var(--faded);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;transition:all 0.3s;" onmouseover="this.style.borderColor='rgba(184,134,11,0.55)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(184,134,11,0.25)';this.style.color='var(--faded)'">
+        ♡ Support Chronicle
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// CONSTANTS & STATE
+// ═══════════════════════════════════
+const STATS=[
+  {key:'military',label:'Military'},{key:'population',label:'People'},
+  {key:'wealth',label:'Wealth'},{key:'culture',label:'Culture'},
+  {key:'territory',label:'Territory'},{key:'technology',label:'Tech'},
+  {key:'stability',label:'Stability'},{key:'legitimacy',label:'Legitimacy'},
+];
+
+let G={
+  nation:'',setting:'',worldSeed:'',foundingType:'',ruler:'',rulers:[],startYear:1,
+  yearNum:1,yearDisplay:'1',yearNamed:false,
+  rulerBeatsLeft:0,   // beats until this ruler's generation ends
+  stats:{military:50,population:50,wealth:50,culture:50,territory:40,technology:30,stability:60,legitimacy:70},
+  discoveries:[],allies:[],enemies:[],history:[],
+  characters:{},  // name -> {gender:'m'|'f'|'?'} — keeps gender consistent
+  rulerStyle:'',  // current ruler's leadership style
+  legacyTraits:[], // accumulated legacy effects from past rulers
+  beat:0,gen:0,pending:false,choiceCtx:null,over:false,
+  peakScore:0,highBeats:0,
+  crisisBeats:0,         // consecutive beats where avg score < 40
+  lastChoiceOutcome:'',  // fed into next event for consequence continuity
+  choiceEchoCount:0,     // counts down beats to carry choice consequence
+  decayCounter:0,        // triggers stability/legitimacy decay
+};
+
+// ═══════════════════════════════════
+// RANDOM NAME GENERATORS
+// ═══════════════════════════════════
+const NAME_PARTS={
+  nation:{
+    pre:['Val','Kel','Mor','Dun','Ash','Tor','Vel','Brak','Eld','Gor','Sev','Kath','Orm','Tal','Wyr','Hal','Ith','Ryn','Cor','Mal'],
+    mid:['drem','mor','ash','en','ith','vor','kar','an','el','on','us','ar','eth','or','un'],
+    suf:['','or','ia','ax','im','','ar','os','','ith','','ur','','an',''],
+  },
+  ruler:{
+    first:['Edric','Varek','Solan','Mira','Thane','Lyra','Gorm','Kessa','Davan','Orla','Brek','Suri','Halvek','Nira','Corvath','Dese','Tyral','Emba','Wulfan','Cael'],
+    epithet:['the Stern','the Bold','the Pale','the Unyielding','Iron-hand','the Just','the Cruel','Long-tongue','the Patient','Twice-born','the Silent','the Younger','Stone-fist','the Learned','the Hungry','the Red','the Old','the Brief','the Cunning','the Forsaken'],
+  }
+};
+
+function randomNation(){
+  const p=NAME_PARTS.nation;
+  const name=p.pre[rng(p.pre.length)-1]+p.mid[rng(p.mid.length)-1]+p.suf[rng(p.suf.length)-1];
+  document.getElementById('inat').value=name.charAt(0).toUpperCase()+name.slice(1);
+}
+
+function randomRuler(){
+  const p=NAME_PARTS.ruler;
+  // First name only — epithets are earned in play
+  document.getElementById('irul').value=p.first[rng(p.first.length)-1];
+}
+
+// ═══════════════════════════════════
+// HALL OF RECORDS (localStorage)
+// ═══════════════════════════════════
+function loadRecords(){
+  try{return JSON.parse(localStorage.getItem('chronicle_records')||'[]');}
+  catch(e){return[];}
+}
+function saveRecord(entry){
+  let recs=loadRecords();
+  recs.push(entry);
+  recs.sort((a,b)=>b.score-a.score);
+  recs=recs.slice(0,10);
+  try{localStorage.setItem('chronicle_records',JSON.stringify(recs));}catch(e){}
+  return recs;
+}
+function renderHall(containerId){
+  const recs=loadRecords();
+  const el=document.getElementById(containerId);
+  if(!el)return;
+  if(!recs.length){el.innerHTML='<div class="hall-empty">No chronicles recorded yet.</div>';return;}
+  el.innerHTML=recs.map((r,i)=>`
+    <div class="hall-row" onclick="openRecord(${i})" style="cursor:pointer;" onmouseover="this.style.background='rgba(184,134,11,0.05)'" onmouseout="this.style.background=''">
+      <div class="hall-rank">${i+1}</div>
+      <div class="hall-name${r.type==='golden'?' golden':''}">${r.nation} <span style="font-family:'IM Fell English',serif;font-size:0.75rem;opacity:0.7">${r.type==='golden'?'✦ Golden Age':'✝ Fallen'}</span></div>
+      <div class="hall-meta">${r.years}yrs · ${r.rulers} ruler${r.rulers!==1?'s':''} · ${r.gens} gen${r.gens!==1?'s':''}</div>
+      <div class="hall-score">${r.score} <span style="font-size:0.55rem;opacity:0.5">▶</span></div>
+    </div>`).join('');
+}
+
+function openRecord(index){
+  const recs=loadRecords();
+  const r=recs[index];
+  if(!r)return;
+  // Build modal content
+  const overlay=document.getElementById('record-overlay');
+  document.getElementById('rec-title').textContent=r.nation;
+  document.getElementById('rec-subtitle').textContent=r.type==='golden'?'✦ Golden Age':'✝ Fallen';
+  document.getElementById('rec-subtitle').style.color=r.type==='golden'?'var(--glory)':'var(--blood)';
+  document.getElementById('rec-years').textContent=`Est. duration: ~${r.years} years · ${r.gens} generation${r.gens!==1?'s':''} · ${r.rulers} ruler${r.rulers!==1?'s':''}`;
+  // Rulers
+  const rl=document.getElementById('rec-rulers');rl.innerHTML='';
+  (r.rulersList||[]).forEach(name=>{const c=document.createElement('div');c.className='rsum';c.textContent=name;rl.appendChild(c);});
+  if(!(r.rulersList||[]).length)rl.innerHTML='<span style="color:var(--faded);font-style:italic;font-size:0.85rem">Not recorded</span>';
+  // Discoveries
+  const dd=document.getElementById('rec-discs');dd.innerHTML='';
+  (r.discoveriesList||[]).forEach(name=>{const c=document.createElement('div');c.className='dch';c.textContent=name;dd.appendChild(c);});
+  if(!(r.discoveriesList||[]).length)dd.innerHTML='<span style="color:var(--faded);font-style:italic;font-size:0.85rem">None recorded</span>';
+  // Summary
+  document.getElementById('rec-summary').innerHTML=r.summary||'<em>No summary recorded.</em>';
+  document.getElementById('rec-epitaph').textContent=r.epitaph||'';
+  overlay.style.display='block';
+  document.body.style.overflow='hidden';
+}
+function closeRecord(e){
+  if(e&&e.target!==document.getElementById('record-overlay'))return;
+  document.getElementById('record-overlay').style.display='none';
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════
+// DICE
+// ═══════════════════════════════════
+const rng=n=>Math.floor(Math.random()*n)+1;
+function rollBeat(){
+  const s=rng(10);
+  const sl=s<=3?'minor':s<=7?'moderate':s<=9?'major':'legendary';
+  const ss={minor:0.6,moderate:1.0,major:1.5,legendary:2.0}[sl];
+  const vr=rng(6);
+  const v=vr<=2?'bad':vr<=4?'mixed':'good';
+  const aa={
+    bad:  ['ruinous','calamitous','bitter','grim','bloody','cruel','wretched','dark'],
+    mixed:['turbulent','uneasy','hard-won','costly','fraught','double-edged','complicated','uncertain'],
+    good: ['prosperous','triumphant','golden','blessed','bold','celebrated','glorious','storied','fruitful','peaceful'],
+  };
+  return{sl,ss,v,adj:aa[v][Math.floor(Math.random()*aa[v].length)]};
+}
+
+// ═══════════════════════════════════
+// YEAR
+// ═══════════════════════════════════
+function initYear(raw){
+  const n=parseInt(raw);
+  if(!isNaN(n)){G.yearNum=n;G.startYear=n;G.yearNamed=false;G.yearDisplay=String(n);}
+  else{G.yearNum=1;G.startYear=1;G.yearNamed=true;G.yearDisplay=raw||'Year One';}
+}
+function advYear(){
+  G.yearNum+=7+rng(12);
+  G.yearDisplay=G.yearNamed?`Year ${G.yearNum}`:String(G.yearNum);
+  document.getElementById('der').textContent=G.yearDisplay;
+  updSticky();
+}
+function yrLbl(){return G.yearNamed&&G.yearNum===G.startYear?G.yearDisplay:`Year ${G.yearNum}`;}
+
+// ═══════════════════════════════════
+// STAT UI
+// ═══════════════════════════════════
+function buildUI(){
+  ['sg1','sg2'].forEach(id=>document.getElementById(id).innerHTML='');
+  STATS.forEach((s,i)=>{
+    const b=document.createElement('div');b.className='sb';b.id=`sb-${s.key}`;
+    b.innerHTML=`<div class="sl2">${s.label}</div><div class="sv2" id="sv-${s.key}">—</div><div class="pr">${Array.from({length:10},(_,j)=>`<div class="pip" id="pp-${s.key}-${j}"></div>`).join('')}</div>`;
+    document.getElementById(i<4?'sg1':'sg2').appendChild(b);
+  });
+  buildStickyUI();
+  renderAll();
+}
+function buildStickyUI(){
+  const row=document.getElementById('srow');row.innerHTML='';
+  STATS.forEach(s=>{
+    const d=document.createElement('div');d.className='ss';
+    d.innerHTML=`<span class="sl">${s.label.slice(0,3).toUpperCase()}</span><span class="sv" id="ssv-${s.key}">—</span><div class="sp">${Array.from({length:5},(_,i)=>`<div class="spip" id="ssp-${s.key}-${i}"></div>`).join('')}</div>`;
+    row.appendChild(d);
+  });
+}
+function renderAll(){STATS.forEach(s=>renderStat(s.key));}
+function renderStat(key){
+  const v=G.stats[key],danger=v<20;
+  const el=document.getElementById(`sv-${key}`);
+  if(el){el.textContent=v;el.className=`sv2${danger?' danger':''}`;}
+  for(let i=0;i<10;i++){
+    const p=document.getElementById(`pp-${key}-${i}`);
+    if(p){const on=v>=(i+1)*10;p.className=`pip${on?' on':''}${on&&danger?' danger':''}`;}
+  }
+  const sv=document.getElementById(`ssv-${key}`);if(sv)sv.textContent=v;
+  for(let i=0;i<5;i++){
+    const sp=document.getElementById(`ssp-${key}-${i}`);
+    if(sp){const on=v>=(i+1)*20;sp.className=`spip${on?' on':''}${on&&danger?' lo':''}`;}
+  }
+}
+function applyStats(changes,scale=1){
+  const chips=[];
+  (changes||[]).forEach(c=>{
+    if(!c?.stat)return;
+    const k=c.stat.toLowerCase().replace(/\s/g,'');
+    if(!(k in G.stats))return;
+    const delta=Math.round((parseInt(c.delta)||0)*scale);
+    G.stats[k]=Math.max(0,Math.min(100,G.stats[k]+delta));
+    renderStat(k);
+    const bl=document.getElementById(`sb-${k}`);
+    if(bl){bl.classList.add('ch');setTimeout(()=>bl.classList.remove('ch'),1000);}
+    chips.push({stat:c.stat,dir:delta>=0?'up':'dn'});
+  });
+  return chips;
+}
+function prosperityScore(){
+  return Math.round(Object.values(G.stats).reduce((a,b)=>a+b,0)/8);
+}
+
+// ═══════════════════════════════════
+// STICKY
+// ═══════════════════════════════════
+function updSticky(){
+  const el=document.getElementById('slbl');
+  if(el)el.textContent=`${G.nation} · ${G.yearDisplay} · ${G.ruler}`;
+}
+window.addEventListener('scroll',()=>{
+  const ins=document.getElementById('is'),st=document.getElementById('sticky');
+  if(!ins||!st)return;
+  st.style.display=ins.getBoundingClientRect().bottom<0&&document.getElementById('game').style.display!=='none'?'block':'none';
+});
+
+// ═══════════════════════════════════
+// HOW TO PLAY
+// ═══════════════════════════════════
+function openHtp(){
+  document.getElementById('htp-overlay').style.display='block';
+  document.body.style.overflow='hidden';
+}
+function closeHtp(e){
+  if(e&&e.target!==document.getElementById('htp-overlay'))return;
+  document.getElementById('htp-overlay').style.display='none';
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════
+// OVERVIEW POPUP
+// ═══════════════════════════════════
+function openPopup(){
+  // Populate stats
+  const sg=document.getElementById('pop-stats');
+  sg.innerHTML='';
+  STATS.forEach(s=>{
+    const v=G.stats[s.key],danger=v<20;
+    const d=document.createElement('div');d.className='pop-stat';
+    d.innerHTML=`<div class="pop-stat-lbl">${s.label}</div><div class="pop-stat-val${danger?' danger':''}">${v}</div><div class="pop-pip-row">${Array.from({length:10},(_,i)=>{const on=v>=(i+1)*10;return`<div class="pop-pip${on?' on':''}${on&&danger?' danger':''}"></div>`;}).join('')}</div>`;
+    sg.appendChild(d);
+  });
+  // Rulers
+  const rr=document.getElementById('pop-rulers');rr.innerHTML='';
+  G.rulers.forEach((r,i)=>{
+    const c=document.createElement('div');c.className=`pop-rch${i===G.rulers.length-1?' cur':''}`;c.textContent=r;rr.appendChild(c);
+  });
+  // Discoveries
+  const dd=document.getElementById('pop-discs');dd.innerHTML='';
+  if(G.discoveries.length){
+    document.getElementById('pop-disc-sec').style.display='';
+    G.discoveries.forEach(d=>{const c=document.createElement('div');c.className='pop-dch';c.textContent=d;dd.appendChild(c);});
+  }else{document.getElementById('pop-disc-sec').style.display='none';}
+  // Allies/enemies
+  const ae=document.getElementById('pop-allies');ae.innerHTML='';
+  if(G.allies.length||G.enemies.length){
+    document.getElementById('pop-ally-sec').style.display='';
+    G.allies.forEach(a=>{const c=document.createElement('div');c.className='pop-ally';c.textContent='⟁ '+a;ae.appendChild(c);});
+    G.enemies.forEach(e=>{const c=document.createElement('div');c.className='pop-emy';c.textContent='✗ '+e;ae.appendChild(c);});
+  }else{document.getElementById('pop-ally-sec').style.display='none';}
+  // Title
+  document.getElementById('pop-nation-title').textContent=`${G.nation} · ${G.yearDisplay}`;
+  document.getElementById('popup-overlay').style.display='block';
+  document.body.style.overflow='hidden';
+}
+function closePopup(e){
+  if(e&&e.target!==document.getElementById('popup-overlay'))return;
+  document.getElementById('popup-overlay').style.display='none';
+  document.body.style.overflow='';
+}
+
+// ═══════════════════════════════════
+// LOG
+// ═══════════════════════════════════
+function addEntry(text,type='',chips=null){
+  const log=document.getElementById('log'),e=document.createElement('div');
+  let cls='ce';
+  if(type==='cr')cls+=' cr';else if(type==='major')cls+=' major';
+  else if(type==='dyn')cls+=' dyn';else if(type==='glory')cls+=' glory';
+  e.className=cls;
+  const yr=document.createElement('div');yr.className='ey';yr.textContent=yrLbl();e.appendChild(yr);
+  const tx=document.createElement('div');tx.className='ex';tx.innerHTML=text;e.appendChild(tx);
+  if(chips?.length){
+    const row=document.createElement('div');row.className='sc';
+    chips.forEach(c=>{const sp=document.createElement('span');sp.className=`chip ${c.dir}`;sp.textContent=`${c.dir==='up'?'▲':'▼'} ${c.stat}`;row.appendChild(sp);});
+    e.appendChild(row);
+  }
+  log.appendChild(e);e.scrollIntoView({behavior:'smooth',block:'end'});
+}
+function addRuler(name,curr=false){
+  document.querySelectorAll('.rch.cur').forEach(c=>c.classList.remove('cur'));
+  const c=document.createElement('div');c.className=`rch${curr?' cur':''}`;c.textContent=name;
+  document.getElementById('rl').appendChild(c);
+}
+function addDisc(name){
+  if(!name||G.discoveries.includes(name))return;
+  G.discoveries.push(name);
+  const c=document.createElement('div');c.className='dch';c.textContent=name;
+  document.getElementById('db').appendChild(c);
+}
+function setLoad(on){
+  const ex=document.getElementById('load-ind');
+  if(on&&!ex){
+    const d=document.createElement('div');d.id='load-ind';d.className='lr';
+    d.textContent='The years turn… the chronicle grows…';
+    document.getElementById('log').appendChild(d);d.scrollIntoView({behavior:'smooth',block:'end'});
+  }else if(!on&&ex)ex.remove();
+}
+
+// ═══════════════════════════════════
+// API
+// ═══════════════════════════════════
+const SYS=`You are the narrator of a mythic, gritty historical chronicle. Your world is entirely fictional — do NOT reference any real-world cultures, nations, religions, places, people, languages, or historical events. All names of people, places, nations, gods, and groups must be invented. Tone: weighty, human, consequential — like a saga or ancient chronicle. Reference prior history when possible.
+When you introduce a named character, include their gender in the response so it can be tracked. Use established genders consistently for all returning characters.
+Reply ONLY in valid JSON, no preamble or markdown fences.`;
+
+async function ask(prompt){
+  const r=await fetch('/api/generate',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt,system:SYS})
+  });
+  if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err?.error||`API error ${r.status}`);}
+  const data=await r.json();
+  const raw=data.text||'{}';
+  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+}
+
+function ctx(){
+  const genderNotes=Object.entries(G.characters).map(([n,g])=>`${n}:${g}`).join(',');
+  const legacyStr=G.legacyTraits.length?G.legacyTraits.join(', '):'none';
+  return `NATION:${G.nation}|SETTING:${G.setting}|RULER:${G.ruler}|RULER STYLE:${G.rulerStyle||'unknown — first reign'}|ALL RULERS:${G.rulers.join(',')}|YEAR:${G.yearNum}
+STATS:Military ${G.stats.military},Population ${G.stats.population},Wealth ${G.stats.wealth},Culture ${G.stats.culture},Territory ${G.stats.territory},Technology ${G.stats.technology},Stability ${G.stats.stability},Legitimacy ${G.stats.legitimacy}
+DISCOVERIES:${G.discoveries.join(',')||'none'}|ALLIES:${G.allies.join(',')||'none'}|ENEMIES:${G.enemies.join(',')||'none'}
+LEGACY TRAITS FROM PAST RULERS:${legacyStr}
+HISTORY:${G.history.slice(-5).join(' > ')}
+ANTI-FIXATION: Do not repeat or over-reference the same cultural theme, belief, landscape feature or practice in consecutive events. The world seed established the starting point — the story has moved on from there. Vary what you focus on.
+NAMED CHARACTERS (gender register — use consistently):${genderNotes||'none yet'}
+REMINDER: All names must be entirely fictional. No real-world references. Use RULER STYLE to shape how events unfold under this ruler.`;
+}
+
+// ═══════════════════════════════════
+// SETUP
+// ═══════════════════════════════════
+// ═══════════════════════════════════
+// SETTINGS - randomised world seeds
+// ═══════════════════════════════════
+// ═══════════════════════════════════
+// WORLD SEED COMPONENTS
+// ═══════════════════════════════════
+const WORLD_COMPONENTS={
+  landscape:[
+    'coastal cliffs','river delta','volcanic archipelago','frozen tundra','dense ancient forest',
+    'high plateau','canyon lands','wetlands and marsh','underground cave network','vast inland sea',
+    'open grasslands','mountain passes','petrified forest','island chain','scorched desert',
+    'river estuary','mangrove swamps','glacier-carved valleys','shifting sand dunes','sunken lowlands',
+    'cliff-face settlements','rolling chalk downs','black lava plains','jungle river basin','steppe borderlands',
+    'flooded salt flats','rocky sea stacks','deep ravine system','ancient impact crater','peninsula and bay',
+  ],
+  climate:[
+    'scorched and arid','bitterly cold with long winters','perpetually fog-bound','storm-lashed and wet',
+    'seasonally flooded','thin-aired and searingly clear','humid and overgrown','relentlessly windswept',
+    'temperate with harsh springs','dry summers and sodden winters','volcanic and ash-dusted',
+    'tidal and unpredictable','monsoon-drenched','permafrost beneath fertile surface',
+    'mild but earthquake-prone','sun-bleached and shadowless','ice-locked half the year',
+    'subject to violent flash floods','prone to drought and sudden abundance','eternally overcast',
+  ],
+  belief:[
+    'ancestor veneration — the dead advise the living','astronomical religion — stars govern all decisions',
+    'flood mythology — creation and destruction are the same event','death and fertility are the same god',
+    'animist forest spirits — every living thing has a voice','trance and vision-seeking as governance',
+    'storm worship — violence is sacred','underground sacred spaces — depth equals holiness',
+    'fire as the first and final truth','oral storytelling as law and memory',
+    'trade as spiritual practice — exchange is prayer','navigation as priesthood — to be lost is sin',
+    'the bones of the earth are the bones of the gods','silence as the highest form of worship',
+    'blood debt and honour cycles','dream interpretation drives decisions',
+    'the body as sacred text — scars and marks are read','water as the only true god',
+    'twin deities of creation and destruction in endless war','time as circular — history repeats and must be guided',
+  ],
+  society:[
+    'kinship clans above all else','merchant councils hold true power',
+    'priest-kings who speak for the gods','warrior elite who decide by combat',
+    'elected councils of elders','matrilineal inheritance — all power flows through mothers',
+    'nomadic confederacy — loyalty to movement not place','caste determined by birthplace or altitude',
+    'democratic assembly of all adults','a scholar class who interpret everything',
+    'guild structure — trade determines rank','military meritocracy — rank earned in battle',
+    'theocratic oligarchy — priests and merchants intertwined','seasonal leadership — rulers change with the year',
+    'twin rulership — always two leaders who must agree','exiled caste system — outcasts hold ritual power',
+    'age-based hierarchy — the oldest decide','hereditary specialist families — certain arts are kept in bloodlines',
+  ],
+  livelihood:[
+    'deep sea fishing and oceanic trade','pastoral herding across vast distances',
+    'intensive river agriculture','long distance overland trade routes',
+    'hunting and managed wilderness','quarrying and monumental building',
+    'textile and craft production','river and canal navigation',
+    'mining and smelting','dryland farming and water management',
+    'forest harvesting and cultivation','salt production and preservation',
+    'animal husbandry and breeding','ceramic and pottery craft',
+    'medicinal and ritual plant cultivation','pearl and deep-sea diving',
+    'glassmaking and optical craft','fermentation and brewing as industry',
+    'astronomical observation and timekeeping','shipbuilding and naval craft',
+  ],
+};
+
+function pick(arr,n=1){
+  const shuffled=[...arr].sort(()=>Math.random()-0.5);
+  return shuffled.slice(0,n);
+}
+
+function randomSeed(){
+  // Pick 2 from landscape, 1 climate, 2 beliefs, 1 society, 2 livelihoods
+  const landscape=pick(WORLD_COMPONENTS.landscape,2).join(' and ');
+  const climate=pick(WORLD_COMPONENTS.climate,1)[0];
+  const beliefs=pick(WORLD_COMPONENTS.belief,2);
+  const society=pick(WORLD_COMPONENTS.society,1)[0];
+  const livelihoods=pick(WORLD_COMPONENTS.livelihood,2).join(' and ');
+
+  const world=`${climate} ${landscape} — a people organised around ${society}, whose livelihoods centre on ${livelihoods}, who hold that ${beliefs[0]}, and who believe ${beliefs[1]}`;
+  const founding=FOUNDING_TYPES[Math.floor(Math.random()*FOUNDING_TYPES.length)];
+  return {world, founding};
+}
+
+// Register named characters from API response
+function registerCharacters(newChars){
+  if(!newChars||typeof newChars!=='object')return;
+  Object.entries(newChars).forEach(([name,gender])=>{
+    if(name&&!G.characters[name])G.characters[name]=gender||'?';
+  });
+}
+
+async function beginGame(){
+  const nation=document.getElementById('inat').value.trim();
+  const ruler=document.getElementById('irul').value.trim();
+  if(!nation||!ruler){alert('Name your nation and first ruler.');return;}
+  G.nation=nation;G.ruler=ruler;
+  const seed=randomSeed();
+  G.worldSeed=seed.world;
+  G.foundingType=seed.founding;
+  G.setting=seed.world; // keep setting as world for backwards compat with ctx()
+  G.rulerBeatsLeft=3+rng(5); // rulers last 3-8 beats
+  G.rulers=[ruler];
+  // Always start from year 1
+  G.yearNum=1;G.startYear=1;G.yearNamed=false;G.yearDisplay='1';
+  document.getElementById('dnn').textContent=nation;
+  document.getElementById('der').textContent='Year 1';
+  updSticky();
+  document.getElementById('setup').style.display='none';
+  document.getElementById('game').style.display='block';
+  buildUI();addRuler(ruler,true);setLoad(true);
+  try{
+    const d=await ask(`${ctx()}
+WORLD SEED: ${G.worldSeed}
+FOUNDING: ${G.ruler} came to power ${G.foundingType}
+Write the opening chronicle entry in two parts:
+First, 2 sentences describing the land and people — environment, appearance, how they live, what they value, what they fear or worship. Specific to the world seed. No ruler names yet.
+Then, 1-2 sentences on how ${ruler} came to lead ${nation}, reflecting the founding type above.
+IMPORTANT: Do not default to mining, iron or metalwork unless the world seed specifically suggests it. Lean into what makes this world unique — faith, food, kinship, trade, art, language, the natural world.
+All names invented. No real-world references.
+Return:{"text":"...","rulerStyle":"one phrase leadership style for ${ruler}","statChanges":[],"discovery":null,"historySummary":"brief phrase","newCharacters":{"${ruler}":"m or f or ?"}}`);
+    addEntry(d.text||`<em>${nation}</em> rises. ${ruler} stands at the threshold of history.`,'major');
+    if(d.rulerStyle)G.rulerStyle=d.rulerStyle;
+    if(d.discovery)addDisc(d.discovery);
+    if(d.historySummary)G.history.push(d.historySummary);
+    if(d.newCharacters)registerCharacters(d.newCharacters);
+  }catch(e){addEntry(`<em>${nation}</em> rises. ${ruler} stands at the threshold of history.`,'major');}
+  setLoad(false);
+  document.getElementById('contbtn').disabled=false;
+}
+
+// ═══════════════════════════════════
+// BEAT ENGINE
+// ═══════════════════════════════════
+async function nextBeat(){
+  if(G.pending||G.over)return;
+  document.getElementById('contbtn').disabled=true;
+  setLoad(true);
+  advYear();G.beat++;
+  const dice=rollBeat();
+  const ps=prosperityScore();
+  if(ps>G.peakScore)G.peakScore=ps;
+  if(ps>=65)G.highBeats++;else G.highBeats=0;
+
+  // Crisis tracking — sustained low score
+  if(ps<40)G.crisisBeats++;else G.crisisBeats=Math.max(0,G.crisisBeats-1);
+
+  // Stat decay — only when NOT prosperous, slower rate
+  // Represents entropy and neglect, not an inevitable timer
+  if(ps<60){  // only decays when below comfortable prosperity
+    G.decayCounter++;
+    if(G.decayCounter>=6){  // every 6 beats instead of 4
+      G.decayCounter=0;
+      if(G.stats.stability>25)applyStats([{stat:'stability',delta:-2}],1);
+      if(G.stats.legitimacy>25)applyStats([{stat:'legitimacy',delta:-1}],1);
+    }
+  } else {
+    G.decayCounter=0; // reset counter when prosperous
+  }
+
+  // Beat type — choice every 2 beats, generation when ruler lifespan expires
+  G.rulerBeatsLeft--;
+  let type;
+  if(G.rulerBeatsLeft<=0) type='gen';
+  else if(G.beat%2===0) type='choice';
+  else if(dice.v==='bad'&&dice.sl!=='minor') type='disaster';
+  else if(dice.sl==='legendary'&&dice.v!=='bad') type='discovery';
+  else if(G.beat%3===1) type='detail';
+  else type='event';
+
+  try{
+    if(type==='gen')await beatGen(dice);
+    else if(type==='choice'){await beatChoice(dice);return;}
+    else if(type==='disaster')await beatDisaster(dice);
+    else if(type==='discovery')await beatDisc(dice);
+    else if(type==='detail')await beatDetail(dice);
+    else await beatEvent(dice);
+  }catch(e){
+    console.error(e);
+    const msg=e.message?.includes('401')||e.message?.includes('Authentication')
+      ?'API key error — check your key is correct via the link below.'
+      :'The years passed. Time moved as it always does, uncaring and unhurried.';
+    addEntry(msg);
+  }
+  setLoad(false);
+  document.getElementById('contbtn').disabled=false;
+  checkEnding();
+  saveGame();
+}
+
+// ═══════════════════════════════════
+// BEAT TYPES
+// ═══════════════════════════════════
+async function beatEvent(dice){
+  const choiceCtx=G.lastChoiceOutcome&&G.choiceEchoCount>0
+    ?`\nRECENT CHOICE CONSEQUENCE: ${G.lastChoiceOutcome} — let this colour the event if relevant.`:'';
+  if(G.choiceEchoCount>0)G.choiceEchoCount--;
+  else G.lastChoiceOutcome='';
+
+  // Roll event category to guide stat weighting
+  const eventCats=[
+    {cat:'military conflict',stats:'military(primary),stability,legitimacy,territory'},
+    {cat:'cultural or religious',stats:'culture(primary),stability,legitimacy'},
+    {cat:'economic or trade',stats:'wealth(primary),population,territory'},
+    {cat:'agricultural or environmental',stats:'population(primary),wealth,territory'},
+    {cat:'political intrigue or succession',stats:'legitimacy(primary),stability,culture'},
+    {cat:'exploration or expansion',stats:'territory(primary),technology,culture'},
+    {cat:'technological or intellectual',stats:'technology(primary),culture,wealth'},
+    {cat:'diplomatic',stats:'stability(primary),legitimacy,wealth'},
+  ];
+  const ec=eventCats[Math.floor(Math.random()*eventCats.length)];
+
+  // Occasionally have allies or enemies act
+  const allyEnemy=
+    G.allies.length&&Math.random()<0.2 ? `\nNOTE: Consider having the ally "${G.allies[Math.floor(Math.random()*G.allies.length)]}" play a role in this event — aid, message, or complication.` :
+    G.enemies.length&&Math.random()<0.25 ? `\nNOTE: Consider having the enemy "${G.enemies[Math.floor(Math.random()*G.enemies.length)]}" play a role — provocation, raid, or diplomatic pressure.` : '';
+
+  const d=await ask(`${ctx()}
+DICE:significance=${dice.sl},valence=${dice.v},adjective="${dice.adj}"${choiceCtx}${allyEnemy}
+EVENT CATEGORY: ${ec.cat}
+Generate a ${dice.adj} ${ec.cat} event. Stat changes should primarily affect: ${ec.stats}. Be specific — name people and places with invented names. Scale matches significance (${dice.sl}).
+IMPORTANT: Do NOT default to mining or ironworking unless the history specifically establishes it. This world has many dimensions.
+Return:{"text":"2-3 vivid sentences using <em>tags</em> for names","statChanges":[{"stat":"...","delta":N}],"discovery":null,"newAlly":null,"newEnemy":null,"historySummary":"one plain factual phrase — what happened, not how it felt (e.g. 'eastern border war lost' not 'the blood-soaked fields of Kethros claimed a generation')","newCharacters":{"Name":"m or f or ?"}}
+Valid stats:military,population,wealth,culture,territory,technology,stability,legitimacy. Deltas -15 to +15.`);
+  const chips=applyStats(d.statChanges,dice.ss);
+  addEntry(d.text||'The years passed in quiet toil.','',chips);
+  if(d.newAlly)G.allies.push(d.newAlly);
+  if(d.newEnemy)G.enemies.push(d.newEnemy);
+  if(d.discovery)addDisc(d.discovery);
+  if(d.historySummary)G.history.push(d.historySummary);
+  if(d.newCharacters)registerCharacters(d.newCharacters);
+}
+
+async function beatDetail(dice){
+  // Small human-scale moments — births, encounters, heresies, explorations, rumours
+  const detailTypes=[
+    'an heir born or a notable child described',
+    'a new people or tribe encountered at the borders',
+    'a region or landmark explored or named for the first time',
+    'a new religious sect, heresy or spiritual movement emerging',
+    'a marriage, betrothal or family alliance among the powerful',
+    'a celebrated artisan, poet, healer or eccentric becoming notable',
+    'a rumour or prophecy spreading through the people',
+    'a new custom, festival or tradition taking hold',
+    'a diplomatic gift, insult or curious visitor from afar',
+    'a famine, abundance or unusual weather briefly noted',
+  ];
+  const pick=detailTypes[Math.floor(Math.random()*detailTypes.length)];
+  const d=await ask(`${ctx()}
+Generate a small, human-scale chronicle detail: ${pick}.
+This is a texture beat — not a major event. 1-2 sentences, specific and vivid. Name people with invented names. No real-world references.
+It may move one stat very slightly (delta -5 to +5) or none at all.
+Return:{"text":"1-2 vivid sentences using <em>tags</em> for names","statChanges":[{"stat":"...","delta":N}],"historySummary":"brief phrase","newCharacters":{"Name":"m or f or ?"}}`);
+  const chips=applyStats(d.statChanges||[],0.8);
+  addEntry(d.text||'The years brought quiet change.','',chips);
+  if(d.historySummary)G.history.push(d.historySummary);
+  if(d.newCharacters)registerCharacters(d.newCharacters);
+}
+
+async function beatDisaster(dice){
+  const disasterTypes=[
+    {type:'plague or pestilence',stats:'population(primary -20 or worse),stability,wealth'},
+    {type:'famine or crop failure',stats:'population(primary),wealth(primary),stability'},
+    {type:'invasion or foreign conquest',stats:'military(primary),territory,stability,legitimacy'},
+    {type:'civil war or rebellion',stats:'stability(primary -20 or worse),legitimacy,military,population'},
+    {type:'catastrophic flood or drought',stats:'population,wealth(primary),territory'},
+    {type:'dynastic betrayal or assassination',stats:'legitimacy(primary -20 or worse),stability,culture'},
+    {type:'religious upheaval or holy war',stats:'stability(primary),culture,legitimacy'},
+    {type:'catastrophic military defeat',stats:'military(primary -20 or worse),territory,stability'},
+  ];
+  const dt=disasterTypes[Math.floor(Math.random()*disasterTypes.length)];
+  const d=await ask(`${ctx()}
+DICE:significance=${dice.sl},adjective="${dice.adj}"
+DISASTER TYPE: ${dt.type}
+Generate a ${dice.adj} ${dt.type}. Brutal but human — show cost in lives and choices. Invented names only.
+Stat changes must primarily affect: ${dt.stats}. At least one stat must drop -15 or worse before multiplier.
+Return:{"text":"3-4 weighty sentences with <em>tags</em>","statChanges":[{"stat":"...","delta":N}],"historySummary":"brief phrase"}
+Valid:military,population,wealth,culture,territory,technology,stability,legitimacy.`);
+  const chips=applyStats(d.statChanges,dice.ss);
+  addEntry(d.text||'Catastrophe fell upon the land.','major',chips);
+  if(d.historySummary)G.history.push(d.historySummary);
+}
+
+async function beatDisc(dice){
+  const d=await ask(`${ctx()}
+WORLD SEED: ${G.worldSeed}
+Generate a significant discovery, invention or cultural achievement that fits this specific world. Consider: navigation technique, agricultural method, architectural feat, philosophical text, musical tradition, healing practice, astronomical knowledge, new material, spiritual revelation, engineering solution.
+Do NOT default to metalwork or mining. Find something specific to this world's character.
+Return:{"text":"2-3 vivid sentences","statChanges":[{"stat":"...","delta":N}],"discovery":"Short invented name 3-5 words","historySummary":"brief phrase"}
+1-3 positive changes. Valid:military,population,wealth,culture,territory,technology,stability,legitimacy.`);
+  const chips=applyStats(d.statChanges,1.0);
+  addEntry(d.text||'A great achievement was recorded.','',chips);
+  addDisc(d.discovery);
+  if(d.historySummary)G.history.push(d.historySummary);
+}
+
+async function beatGen(dice){
+  G.gen++;
+  const deadRuler=G.ruler; // capture before overwriting
+
+  const d=await ask(`${ctx()}
+DICE:valence=${dice.v}
+IMPORTANT: ${deadRuler} is DEAD or has permanently left power. They cannot return. Their reign is over.
+1. Write their epitaph — 1-2 sentences. Give them an earned epithet based on actual events in the history. e.g. "...and so ended the reign of Edric, who the people called the Merciless." The epithet must reflect real deeds.
+2. Generate a completely new ruler — different person, new name. Heir, usurper, elected, military general, foreign claimant, or priest. Low stability(${G.stats.stability}) or legitimacy(${G.stats.legitimacy}) = contested/violent succession.
+3. New ruler: plain first name only, no epithet yet.
+4. Generate a SHORT leadership style for the new ruler (one phrase, e.g. "pragmatic builder who avoids war", "zealous reformer moving too fast", "paranoid isolationist", "beloved but easily manipulated"). This will shape future events.
+5. Generate a legacy trait ${deadRuler} leaves behind — one short phrase reflecting their lasting impact on the nation (e.g. "strong military tradition", "lingering resentment among the poor", "reputation for scholarship").
+6. Stat impact of transition.
+Return:{"epitaph":"1-2 sentences with earned epithet for ${deadRuler}","newRulerName":"Plain First Name Only","newRulerIntro":"1-2 sentences on how they took power","rulerStyle":"one phrase leadership style","legacyTrait":"one phrase legacy","transitionType":"peaceful|contested|usurped|elected|foreign","statChanges":[{"stat":"...","delta":N}],"historySummary":"brief phrase","newCharacters":{"NewRulerName":"m or f or ?"}}
+Valid:military,population,wealth,culture,territory,technology,stability,legitimacy.`);
+
+  // Apply legacy trait stat nudge
+  const legacyStatMap={
+    'military':['strong military','warrior','conquest','battle'],
+    'culture':['scholar','art','learning','culture','faith','religion'],
+    'stability':['peace','stability','order','law'],
+    'wealth':['trade','merchant','wealth','prosperous'],
+    'legitimacy':['beloved','revered','sacred','divine'],
+  };
+
+  const chips=applyStats(d.statChanges,1.0);
+
+  // Apply small legacy stat effect
+  if(d.legacyTrait){
+    G.legacyTraits.push(d.legacyTrait);
+    if(G.legacyTraits.length>4)G.legacyTraits.shift(); // keep last 4
+    // Give a tiny stat nudge based on legacy content
+    const lt=d.legacyTrait.toLowerCase();
+    for(const[stat,keywords] of Object.entries(legacyStatMap)){
+      if(keywords.some(k=>lt.includes(k))){
+        applyStats([{stat,delta:3}],1);
+        break;
+      }
+    }
+  }
+
+  // Explicitly record death in history to prevent zombie ruler
+  G.history.push(`${deadRuler} died/left power — succeeded by ${d.newRulerName||'new ruler'}`);
+
+  addEntry(`${d.epitaph||''} ${d.newRulerIntro||''}`.trim()||`The reign of ${deadRuler} ended.`,'dyn',chips);
+
+  G.ruler=d.newRulerName||'The New Ruler';
+  G.rulerStyle=d.rulerStyle||'';
+  G.rulers.push(G.ruler);addRuler(G.ruler,true);updSticky();
+  G.rulerBeatsLeft=3+rng(5);
+  if(d.historySummary)G.history.push(d.historySummary);
+  if(d.newCharacters)registerCharacters(d.newCharacters);
+}
+
+async function beatChoice(dice){
+  // Occasionally offer a third "do nothing" option — always has a passive cost
+  const offerThird=Math.random()<0.35;
+  const thirdInstruction=offerThird?'\nAlso include choiceC: an option to do nothing or delay — passive, costs stability or legitimacy, avoids the immediate stakes.':'';
+  const d=await ask(`${ctx()}
+DICE:significance=${dice.sl},adjective="${dice.adj}"
+Critical decision moment. This should feel meaningful — a war,succession crisis,famine,religious schism,treaty,alliance,great project,treatment of a defeated enemy,internal rebellion. Both main options must have genuine cost AND benefit — not one clearly right answer.${thirdInstruction}
+Return:{"situation":"2-3 sentences on crisis and stakes","choiceA":{"label":"max 8 words","statChanges":[{"stat":"...","delta":N}],"consequence":"2 sentences","historySummary":"phrase"},"choiceB":{"label":"max 8 words","statChanges":[{"stat":"...","delta":N}],"consequence":"2 sentences","historySummary":"phrase"}${offerThird?',"choiceC":{"label":"max 8 words — delay or inaction","statChanges":[{"stat":"stability","delta":-8}],"consequence":"2 sentences on what festering inaction costs","historySummary":"phrase"}':''}}
+Valid:military,population,wealth,culture,territory,technology,stability,legitimacy.`);
+  setLoad(false);renderChoice(d,dice,offerThird);
+}
+
+function renderChoice(data,dice,hasThird=false){
+  G.pending=true;G.choiceCtx={data,dice};
+  const area=document.getElementById('ca');area.innerHTML='';
+  const block=document.createElement('div');block.className='cm';
+  const thirdBtn=hasThird&&data.choiceC
+    ?`<button class="copt copt-passive" onclick="resolveChoice('C')" style="border-color:rgba(184,134,11,0.1);opacity:0.75;font-style:italic"><strong>${data.choiceC.label||'Do nothing — let it wait'}</strong></button>`
+    :'';
+  block.innerHTML=`<div class="ct">A Moment of Decision</div><div class="cs">${data.situation||'A crisis demands your answer.'}</div><div class="co"><button class="copt" onclick="resolveChoice('A')"><strong>${data.choiceA?.label||'Option A'}</strong></button><button class="copt" onclick="resolveChoice('B')"><strong>${data.choiceB?.label||'Option B'}</strong></button>${thirdBtn}</div>`;
+  area.appendChild(block);block.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function resolveChoice(which){
+  const{data,dice}=G.choiceCtx;
+  const chosen=which==='A'?data.choiceA:which==='B'?data.choiceB:data.choiceC;
+  document.querySelectorAll('.copt').forEach(b=>b.disabled=true);
+  const chips=applyStats(chosen?.statChanges,dice.ss);
+  addEntry(chosen?.consequence||'The decision was made.','cr',chips);
+  if(chosen?.historySummary){
+    G.history.push(chosen.historySummary);
+    G.lastChoiceOutcome=chosen.historySummary;
+    G.choiceEchoCount=2; // carry forward for 2 beats
+  }
+  G.pending=false;document.getElementById('ca').innerHTML='';
+  checkEnding();document.getElementById('contbtn').disabled=false;
+  saveGame();
+}
+
+// ═══════════════════════════════════
+// ENDINGS
+// ═══════════════════════════════════
+function checkEnding(){
+  if(G.over)return;
+  const s=G.stats;
+
+  // DEFEAT — requires sustained crisis, not a single bad roll
+  // Population collapse: immediate
+  // Military+stability: both must be critically low
+  // Stability: must hit zero (not just low) OR be very low for 3+ consecutive beats
+  // Legitimacy collapse: only triggers defeat if stability is ALSO in the danger zone
+  const defeated=
+    s.population<=5||
+    (s.military<=8&&s.stability<=8)||
+    s.stability<=0||
+    (s.legitimacy<=5&&s.stability<=20)||
+    (G.crisisBeats>=4&&prosperityScore()<=18); // prolonged total collapse
+
+  // GOLDEN AGE — sustained, earned, rare
+  const avgScore=prosperityScore();
+  const golden=
+    G.beat>=10&&
+    G.highBeats>=4&&
+    avgScore>=72&&
+    s.stability>=72&&
+    s.legitimacy>=68&&
+    s.culture>=60&&
+    Math.random()<0.10;
+
+  if(golden)scheduleEnding('golden');
+  else if(defeated)scheduleEnding('fallen');
+}
+
+function scheduleEnding(type){
+  G.over=true;
+  localStorage.removeItem('chronicle_save'); // clear save — game is over
+  document.getElementById('contbtn').disabled=true;
+  // 8 seconds to read — then a "View Summary" button appears
+  let secs=8;
+  const notice=document.createElement('div');
+  notice.id='end-notice';
+  notice.style.cssText='text-align:center;padding:1.5rem;margin-top:0.5rem;';
+
+  const banner=type==='golden'
+    ?`<div style="font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--glory);margin-bottom:0.5rem;text-shadow:0 0 20px rgba(200,168,75,0.3)">✦ A Golden Age ✦</div><div style="font-style:italic;color:var(--faded);font-size:0.9rem;margin-bottom:1rem;">Your nation has achieved something rare. The chronicle is being written.</div>`
+    :`<div style="font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--blood);margin-bottom:0.5rem;text-shadow:0 0 20px rgba(122,31,31,0.3)">The End Comes</div><div style="font-style:italic;color:var(--faded);font-size:0.9rem;margin-bottom:1rem;">Your nation has fallen. Take a moment to read what led here.</div>`;
+
+  notice.innerHTML=banner+`<div id="end-countdown" style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--faded);opacity:0.5;">The chronicle will be ready in ${secs}…</div>`;
+  document.getElementById('log').appendChild(notice);
+  notice.scrollIntoView({behavior:'smooth',block:'end'});
+
+  const timer=setInterval(()=>{
+    secs--;
+    const cd=document.getElementById('end-countdown');
+    if(secs>0){
+      if(cd)cd.textContent=`The chronicle will be ready in ${secs}…`;
+    }else{
+      clearInterval(timer);
+      if(cd)cd.innerHTML=`<button onclick="triggerEnding('${type}')" style="margin-top:0.5rem;padding:0.75rem 2.2rem;background:linear-gradient(135deg,rgba(184,134,11,0.15),rgba(184,134,11,0.08));border:1px solid rgba(184,134,11,0.45);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;">Read the Chronicle →</button>`;
+    }
+  },1000);
+}
+
+async function triggerEnding(type){
+  document.getElementById('end-notice')?.remove();
+  setLoad(true);
+  let titleText,titleClass,epitaph,summaryNarrative;
+
+  if(type==='golden'){
+    titleText='A Golden Age';titleClass='golden';
+    try{
+      const d=await ask(`${ctx()}
+${G.nation} has achieved a genuine golden age. Write its crowning epitaph: 2-3 sentences, luminous but not naive.
+Then write Jeremiah the Historian's summary — delivered in the style of a BBC documentary presenter standing in the ruins of a lost civilisation. Jeremiah speaks to what modern scholars would actually know: physical evidence (structures, burials, artefacts), written records if any, trade evidence, what survives and what doesn't. He speaks in first person plural — "we know", "we have found", "the evidence suggests", "what remains tells us". Never refers to himself by name. 3-4 sentences, no more. The tone is measured, expert, quietly moved.
+Consider: did this civilisation have permanent structures? Written language? Burial traditions? Trade networks? What physical traces would a golden age leave?
+Return:{"epitaph":"...","summaryNarrative":"..."}`);
+      epitaph=d.epitaph;summaryNarrative=d.summaryNarrative;
+    }catch(e){}
+  }else{
+    titleText='The Nation Falls';titleClass='fallen';
+    try{
+      const d=await ask(`${ctx()}
+The nation of ${G.nation} has fallen. Write its final epitaph: 2-3 sentences, weighty and final.
+Then write Jeremiah the Historian's summary — delivered in the style of a BBC documentary presenter standing in a field or among ruins. Jeremiah speaks plainly about what modern scholars would actually know: physical remains, written records if any, what archaeology has recovered. He speaks in first person plural — "we know", "we have found", "what little survives suggests", "the record simply stops". Never refers to himself by name. 3-4 sentences, no more. The tone is precise, quietly melancholy, expert.
+Consider: did this civilisation leave permanent structures? Written records? Burial sites? Trade evidence? Or almost nothing at all? Let the stats and history inform how much survived.
+Return:{"epitaph":"...","summaryNarrative":"..."}`);
+      epitaph=d.epitaph;summaryNarrative=d.summaryNarrative;
+    }catch(e){}
+  }
+
+  if(!epitaph)epitaph=type==='golden'
+    ?`${G.nation} reached heights few nations ever know.`
+    :`${G.nation} endured ${G.rulers.length} ruler${G.rulers.length!==1?'s':''} before history swallowed it.`;
+  if(!summaryNarrative)summaryNarrative=G.history.slice(-5).join('. ')+'.';
+
+  // Save to Hall of Records
+  const yearsSpanned=G.yearNum-G.startYear;
+  const score=Math.round(G.peakScore*0.4 + (yearsSpanned/10)*0.3 + G.beat*2 + (type==='golden'?50:0));
+  const rec={
+    nation:G.nation, type, score, years:yearsSpanned,
+    rulers:G.rulers.length, gens:G.gen+1, setting:G.setting,
+    rulersList:G.rulers,
+    discoveriesList:G.discoveries,
+    summary:summaryNarrative,
+    epitaph:epitaph,
+  };
+  saveRecord(rec);
+
+  setLoad(false);
+
+  // Populate end screen
+  document.getElementById('end-title').textContent=titleText;
+  document.getElementById('end-title').className=`et2 ${titleClass}`;
+  document.getElementById('end-epi').textContent=epitaph;
+  document.getElementById('sum-years').textContent=
+    `Est. duration: ~${yearsSpanned} years. ${G.gen+1} known generation${G.gen!==0?'s':''}. ${G.rulers.length} named ruler${G.rulers.length!==1?'s':''}. Terminus: Year ${G.yearNum}.`;
+  const rl=document.getElementById('sum-rulers');rl.innerHTML='';
+  G.rulers.forEach(r=>{const c=document.createElement('div');c.className='rsum';c.textContent=r;rl.appendChild(c);});
+  const ds=document.getElementById('sum-discs');ds.innerHTML='';
+  if(G.discoveries.length){
+    G.discoveries.forEach(d=>{const c=document.createElement('div');c.className='dch';c.textContent=d;ds.appendChild(c);});
+  }else{document.getElementById('sum-disc-sec').style.display='none';}
+  document.getElementById('sum-history').innerHTML=summaryNarrative;
+
+  renderHall('hall-end-rows');
+
+  document.getElementById('game').style.display='none';
+  document.getElementById('end').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════
+// END TABS
+// ═══════════════════════════════════
+function switchTab(name){
+  document.querySelectorAll('.etab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.etab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector(`.etab[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+// ═══════════════════════════════════
+// IDLE TIMEOUT — prevents API calls from forgotten open tabs
+// ═══════════════════════════════════
+let idleTimer=null;
+const IDLE_MINUTES=15;
+
+function resetIdle(){
+  clearTimeout(idleTimer);
+  idleTimer=setTimeout(()=>{
+    // Disable the continue button silently after idle period
+    const btn=document.getElementById('contbtn');
+    if(btn&&!G.over&&!G.pending){
+      btn.disabled=true;
+      btn.textContent='Tap to continue the chronicle';
+      btn.onclick=()=>{
+        btn.textContent='Let the Years Pass →';
+        btn.onclick=nextBeat;
+        resetIdle();
+      };
+    }
+  }, IDLE_MINUTES * 60 * 1000);
+}
+
+// Reset idle timer on any user interaction
+['click','touchstart','keydown'].forEach(ev=>
+  document.addEventListener(ev, resetIdle, {passive:true})
+);
+resetIdle();
+(function init(){
+  renderHall('hall-setup-rows');
+
+  // Check for saved game
+  try{
+    const saved=localStorage.getItem('chronicle_save');
+    if(saved){
+      const s=JSON.parse(saved);
+      // Only restore if game was actually in progress and not over
+      if(s.nation && s.beat > 0 && !s.over){
+        showContinuePrompt(s);
+        return;
+      }
+    }
+  }catch(e){}
+
+  document.getElementById('setup').style.display='block';
+})();
+
+function showContinuePrompt(s){
+  const setup=document.getElementById('setup');
+  setup.style.display='block';
+
+  // Insert continue banner above the card
+  const banner=document.createElement('div');
+  banner.id='continue-banner';
+  banner.style.cssText='background:linear-gradient(135deg,rgba(74,138,138,0.12),rgba(26,18,8,0.9));border:1px solid rgba(74,138,138,0.3);padding:1.4rem 1.8rem;margin-bottom:1rem;position:relative;';
+  banner.innerHTML=`
+    <div style="font-family:'Cinzel',serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#9ab;margin-bottom:0.5rem;">Chronicle in Progress</div>
+    <div style="font-size:1rem;color:var(--parchment);margin-bottom:0.2rem;"><em style="color:var(--gold-light)">${s.nation}</em> · Year ${s.yearNum} · ${s.rulers.length} ruler${s.rulers.length!==1?'s':''}</div>
+    <div style="font-size:0.82rem;color:var(--faded);font-style:italic;margin-bottom:1rem;">Current ruler: ${s.ruler}</div>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+      <button onclick="restoreGame()" style="flex:1;padding:0.7rem;background:linear-gradient(135deg,rgba(74,138,138,0.2),rgba(74,138,138,0.1));border:1px solid rgba(74,138,138,0.4);color:#9ab;font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">Continue Chronicle</button>
+      <button onclick="discardSave()" style="flex:1;padding:0.7rem;background:transparent;border:1px solid rgba(184,134,11,0.2);color:var(--faded);font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;">Start New Game</button>
+    </div>
+  `;
+  setup.insertBefore(banner, setup.firstChild);
+}
+
+function saveGame(){
+  if(!G.nation||G.beat===0)return;
+  try{
+    // Save state but not the choice context (functions don't serialise)
+    const toSave={...G, choiceCtx:null, pending:false};
+    localStorage.setItem('chronicle_save', JSON.stringify(toSave));
+  }catch(e){}
+}
+
+function discardSave(){
+  localStorage.removeItem('chronicle_save');
+  const banner=document.getElementById('continue-banner');
+  if(banner)banner.remove();
+}
+
+function restoreGame(){
+  try{
+    const saved=localStorage.getItem('chronicle_save');
+    if(!saved)return;
+    const s=JSON.parse(saved);
+
+    // Restore state
+    Object.assign(G, s);
+    // Handle saves from before rulerBeatsLeft existed
+    if(!G.rulerBeatsLeft||G.rulerBeatsLeft<=0) G.rulerBeatsLeft=3+rng(3);
+    if(!G.rulerStyle) G.rulerStyle='';
+    if(!G.legacyTraits) G.legacyTraits=[];
+
+    // Hide setup, show game
+    document.getElementById('setup').style.display='none';
+    document.getElementById('game').style.display='block';
+
+    // Rebuild UI
+    buildUI();
+
+    // Restore nation header
+    document.getElementById('dnn').textContent=G.nation;
+    document.getElementById('der').textContent=G.yearDisplay;
+    updSticky();
+
+    // Restore rulers
+    G.rulers.forEach((r,i)=>addRuler(r, i===G.rulers.length-1));
+
+    // Restore discoveries
+    G.discoveries.forEach(d=>{
+      const c=document.createElement('div');c.className='dch';c.textContent=d;
+      document.getElementById('db').appendChild(c);
+    });
+
+    // Add a "chronicle restored" entry
+    addEntry(`The chronicle of <em>${G.nation}</em> continues. It is Year ${G.yearNum}, and <em>${G.ruler}</em> holds power.`,'dyn');
+
+    document.getElementById('contbtn').disabled=false;
+  }catch(e){
+    // If restore fails, just show setup fresh
+    discardSave();
+  }
+}
+</script>
+</body>
+</html>
