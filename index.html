@@ -20,20 +20,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',serif;min-height:100vh;overflow-x:hidden;}
 
-/* ── STICKY BAR ── */
-#sticky{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(10,8,4,0.97);padding:0.4rem 1rem 0.5rem;border-bottom:1px solid rgba(184,134,11,0.18);display:none;backdrop-filter:blur(4px);}
-.si{max-width:780px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:0.5rem;}
-.si-left{flex:1;min-width:0;}
-.sn{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);opacity:0.6;margin-bottom:0.28rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sr{display:flex;gap:0.4rem;flex-wrap:wrap;}
-.ss{display:flex;align-items:center;gap:0.2rem;font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.06em;text-transform:uppercase;}
-.sl{color:var(--faded)}.sv{color:var(--gold);min-width:1.4rem;font-weight:600;}
-.sp{display:flex;gap:1px;}
-.spip{width:5px;height:4px;background:rgba(184,134,11,0.12);transition:background 0.4s;}
-.spip.on{background:var(--gold);}.spip.on.lo{background:var(--blood);}
-.btn-overview-sticky{flex-shrink:0;padding:0.3rem 0.7rem;background:transparent;border:1px solid rgba(184,134,11,0.3);color:var(--faded);font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-.btn-overview-sticky:hover{border-color:rgba(184,134,11,0.6);color:var(--gold);}
-
 /* ── LAYOUT ── */
 #app{max-width:780px;margin:0 auto;padding:2rem 1.5rem 6rem;}
 .mast{text-align:center;padding:3rem 0 2rem;border-bottom:1px solid rgba(184,134,11,0.28);margin-bottom:2rem;}
@@ -60,17 +46,33 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 .nh{text-align:center;margin-bottom:1.2rem;}
 .nn{font-family:'Cinzel Decorative',serif;font-size:1.4rem;color:var(--gold);}
 .era{font-style:italic;color:var(--faded);font-size:0.85rem;margin-top:0.2rem;}
-#is{margin-bottom:1.1rem;}
+
+/* ── FLOATING STATS BAR (DEFAULT/MOBILE) ── */
+#is {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(13, 11, 8, 0.95);
+  border-bottom: 1px solid rgba(184, 134, 11, 0.3);
+  padding: 0.5rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+}
+
 .sg{display:grid;grid-template-columns:repeat(4,1fr);gap:0.45rem;margin-bottom:0.45rem;}
-.sb{background:rgba(26,18,8,0.8);border:1px solid rgba(184,134,11,0.12);padding:0.55rem 0.35rem;text-align:center;transition:border-color 0.5s;}
+.sg:last-child { margin-bottom: 0; }
+.sb{background:rgba(255,255,255,0.03);border:1px solid rgba(184,134,11,0.12);padding:0.25rem 0.15rem;text-align:center;transition:border-color 0.5s;}
 .sb.ch{border-color:rgba(184,134,11,0.52);animation:pu 1s ease;}
 @keyframes pu{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(184,134,11,0.22)}}
-.sl2{font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--faded);margin-bottom:0.2rem;}
-.sv2{font-family:'Cinzel',serif;font-size:0.98rem;color:var(--gold);}
+.sl2{font-family:'Cinzel',serif;font-size:0.4rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--faded);margin-bottom:0.1rem;}
+.sv2{font-family:'Cinzel',serif;font-size:0.75rem;color:var(--gold);}
 .sv2.danger{color:var(--blood);}
-.pr{display:flex;justify-content:center;gap:2px;margin-top:0.2rem;}
-.pip{width:5px;height:3px;background:rgba(184,134,11,0.1);transition:background 0.5s;}
+.pr{display:flex;justify-content:center;gap:1.5px;margin-top:0.1rem;}
+.pip{width:4px;height:2px;background:rgba(184,134,11,0.1);transition:background 0.5s;}
 .pip.on{background:var(--gold);}.pip.on.danger{background:var(--blood);}
+
 .mr{display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;margin-bottom:1rem;}
 .mb{background:rgba(26,18,8,0.6);border:1px solid rgba(184,134,11,0.1);padding:0.65rem 0.85rem;}
 .mt{font-family:'Cinzel',serif;font-size:0.56rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--faded);margin-bottom:0.45rem;}
@@ -209,21 +211,72 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 .htp-footer{padding:1rem 1.5rem 1.2rem;border-top:1px solid rgba(184,134,11,0.1);text-align:center;flex-shrink:0;}
 
 @keyframes fi{from{opacity:0}to{opacity:1}}
-@media(max-width:520px){.r2,.mr{grid-template-columns:1fr}.sr{gap:0.25rem}.pop-stats-grid{grid-template-columns:repeat(4,1fr)}.htp-body{padding:1.2rem 1.2rem;}}
+
+/* ── FLOATING DASHBOARD (LAPTOP & DESKTOP) ── */
+@media (min-width: 1024px) {
+  #app {
+    max-width: 1300px;
+    padding: 2rem 4rem 2rem 340px; /* Large left padding to clear floating sidebar */
+  }
+  #game {
+    display: block; /* Remove grid to allow text to flow naturally */
+  }
+  .nh {
+    text-align: left;
+    border-bottom: none;
+    margin-bottom: 2rem;
+  }
+
+  /* The Floating Side Frame */
+  #is {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    width: 280px;
+    right: auto;
+    bottom: auto;
+    background: rgba(20, 14, 6, 0.9);
+    border: 1px solid rgba(184, 134, 11, 0.4);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.5);
+    z-index: 10;
+  }
+
+  /* Metadata Frame sits under Stats */
+  .mr {
+    position: fixed;
+    top: 175px; /* Positioned relative to the stats block height */
+    left: 2rem;
+    width: 280px;
+    background: rgba(26, 18, 8, 0.4);
+    border: 1px solid rgba(184, 134, 11, 0.15);
+    padding: 0.75rem;
+    margin-top: 1rem;
+    border-radius: 4px;
+    grid-template-columns: 1fr; /* Stack vertically in sidebar */
+  }
+
+  .overview-bar, .orn { display: none !important; }
+
+  .ex { font-size: 1.3rem; line-height: 2; }
+  .ce { padding: 2rem; margin-bottom: 1.5rem; border-left-width: 4px; }
+}
+
+/* ── MOBILE PADDING ADJUSTMENT ── */
+@media (max-width: 1023px) {
+  #app { padding-top: 110px; } /* Create space for the top floating bar */
+}
+
+/* ── TABLET / MID-SIZE ADJUSTMENTS ── */
+@media (min-width: 521px) and (max-width: 1024px) {
+  .sg { grid-template-columns: repeat(4, 1fr); max-width: 600px; margin-left: auto; margin-right: auto; }
+}
+
+@media(max-width:520px){.r2,.mr{grid-template-columns:1fr}.pop-stats-grid{grid-template-columns:repeat(4,1fr)}.htp-body{padding:1.2rem 1.2rem;}}
 </style>
 </head>
 <body>
-
-<!-- STICKY -->
-<div id="sticky">
-  <div class="si">
-    <div class="si-left">
-      <div class="sn" id="slbl"></div>
-      <div class="sr" id="srow"></div>
-    </div>
-    <button class="btn-overview-sticky" onclick="openPopup()">Nation Overview</button>
-  </div>
-</div>
 
 <!-- OVERVIEW POPUP -->
 <div id="popup-overlay" onclick="closePopup(event)">
@@ -588,16 +641,7 @@ function buildUI(){
     b.innerHTML=`<div class="sl2">${s.label}</div><div class="sv2" id="sv-${s.key}">—</div><div class="pr">${Array.from({length:10},(_,j)=>`<div class="pip" id="pp-${s.key}-${j}"></div>`).join('')}</div>`;
     document.getElementById(i<4?'sg1':'sg2').appendChild(b);
   });
-  buildStickyUI();
   renderAll();
-}
-function buildStickyUI(){
-  const row=document.getElementById('srow');row.innerHTML='';
-  STATS.forEach(s=>{
-    const d=document.createElement('div');d.className='ss';
-    d.innerHTML=`<span class="sl">${s.label.slice(0,3).toUpperCase()}</span><span class="sv" id="ssv-${s.key}">—</span><div class="sp">${Array.from({length:5},(_,i)=>`<div class="spip" id="ssp-${s.key}-${i}"></div>`).join('')}</div>`;
-    row.appendChild(d);
-  });
 }
 function renderAll(){STATS.forEach(s=>renderStat(s.key));}
 function renderStat(key){
@@ -607,11 +651,6 @@ function renderStat(key){
   for(let i=0;i<10;i++){
     const p=document.getElementById(`pp-${key}-${i}`);
     if(p){const on=v>=(i+1)*10;p.className=`pip${on?' on':''}${on&&danger?' danger':''}`;}
-  }
-  const sv=document.getElementById(`ssv-${key}`);if(sv)sv.textContent=v;
-  for(let i=0;i<5;i++){
-    const sp=document.getElementById(`ssp-${key}-${i}`);
-    if(sp){const on=v>=(i+1)*20;sp.className=`spip${on?' on':''}${on&&danger?' lo':''}`;}
   }
 }
 function applyStats(changes,scale=1){
@@ -770,15 +809,34 @@ const SYS=`You are the narrator of a mythic, gritty historical chronicle. Your w
 When you introduce a named character, include their gender in the response so it can be tracked. Use established genders consistently for all returning characters.
 Reply ONLY in valid JSON, no preamble or markdown fences.`;
 
-async function ask(prompt){
-  const r=await fetch('/api/generate',{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt,system:SYS})
+const GEMINI_API_KEY = "AIzaSyA4oq3mVwVTgg-asxlFpWyB20oGqQrFD3I"; // Ensure this is a valid Gemini API Key
+
+async function ask(prompt) {
+  if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("YOUR_API_KEY")) {
+    throw new Error("[Gemini Error] Missing or invalid API Key.");
+  }
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      system_instruction: { parts: [{ text: SYS }] },
+      generationConfig: { response_mime_type: "application/json" }
+    })
   });
-  if(!r.ok){const err=await r.json().catch(()=>({}));throw new Error(err?.error||`API error ${r.status}`);}
-  const data=await r.json();
-  const raw=data.text||'{}';
-  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(`[Gemini Error] ${err?.error?.message || r.status}`);
+  }
+  const data = await r.json();
+  const candidate = data.candidates?.[0];
+  if (candidate?.finishReason === 'SAFETY') {
+    throw new Error("[Gemini Error] Content blocked by safety filters.");
+  }
+  let raw = candidate?.content?.parts?.[0]?.text || '{}';
+  // Sanitize for potential markdown formatting even with JSON mode enabled
+  raw = raw.replace(/```json|```/g, '').trim();
+  return JSON.parse(raw);
 }
 
 function ctx(){
@@ -1012,9 +1070,12 @@ async function nextBeat(){
     else await beatEvent(dice,ypt);
   }catch(e){
     console.error(e);
-    const msg=e.message?.includes('401')||e.message?.includes('Authentication')
-      ?'API key error — check your key is correct via the link below.'
-      :'The years passed. Time moved as it always does, uncaring and unhurried.';
+    let msg = 'The years passed. Time moved as it always does, uncaring and unhurried.';
+    if (e.message.includes('[Gemini Error]')) {
+      msg = `The Chronicle falters: ${e.message.replace('[Gemini Error]', '').trim()}`;
+    } else if (e.message.includes('401') || e.message.includes('Authentication')) {
+      msg = 'API key error — check your key is correct via the link below.';
+    }
     addEntry(msg);
   }
   setLoad(false);
