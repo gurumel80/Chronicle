@@ -809,20 +809,21 @@ const SYS=`You are the narrator of a mythic, gritty historical chronicle. Your w
 When you introduce a named character, include their gender in the response so it can be tracked. Use established genders consistently for all returning characters.
 Reply ONLY in valid JSON, no preamble or markdown fences.`;
 
-const GEMINI_API_KEY = "AIzaSyA4oq3mVwVTgg-asxlFpWyB20oGqQrFD3I"; // Ensure this is a valid Gemini API Key
-
 async function ask(prompt) {
-  if (!GEMINI_API_KEY || GEMINI_API_KEY.includes("YOUR_API_KEY")) {
-    throw new Error("[Gemini Error] Missing or invalid API Key.");
-  }
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+  const r = await fetch('/api/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      system_instruction: { parts: [{ text: SYS }] },
-      generationConfig: { response_mime_type: "application/json" }
-    })
+    body: JSON.stringify({ prompt, system: SYS }),
+  });
+  if (!r.ok) {
+    const err = await r.json().catch(() => ({}));
+    throw new Error(`[Chronicle error] ${err?.error || r.status}`);
+  }
+  const data = await r.json();
+  let raw = data.text || '{}';
+  raw = raw.replace(/```json|```/g, '').trim();
+  return JSON.parse(raw);
+}
   });
   if (!r.ok) {
     const err = await r.json().catch(() => ({}));
