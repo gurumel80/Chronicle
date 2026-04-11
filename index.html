@@ -1317,19 +1317,7 @@ function checkEnding(){
     (s.legitimacy<=5&&s.stability<=20)||
     (G.crisisBeats>=4&&prosperityScore()<=18); // prolonged total collapse
 
-  // GOLDEN AGE — sustained, earned, rare
-  const avgScore=prosperityScore();
-  const golden=
-    G.beat>=10&&
-    G.highBeats>=4&&
-    avgScore>=72&&
-    s.stability>=72&&
-    s.legitimacy>=68&&
-    s.culture>=60&&
-    Math.random()<0.10;
-
-  if(golden)scheduleEnding('golden','');
-  else if(defeated){
+  if(defeated){
     // Determine cause for final event and Jeremiah
     let cause='unknown causes';
     if(s.population<=5) cause='catastrophic population collapse — the people are gone';
@@ -1383,50 +1371,52 @@ Return:{"text":"2-3 vivid sentences with <em>tags</em> for names"}`);
       if(cd)cd.textContent=`The chronicle will be ready in ${secs}…`;
     }else{
       clearInterval(timer);
-      if(cd)cd.innerHTML=`<button onclick="triggerEnding('${type}')" style="margin-top:0.5rem;padding:0.75rem 2.2rem;background:linear-gradient(135deg,rgba(184,134,11,0.15),rgba(184,134,11,0.08));border:1px solid rgba(184,134,11,0.45);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;">Read the Chronicle →</button>`;
+      if(cd)cd.innerHTML=`<button onclick="triggerEnding()" style="margin-top:0.5rem;padding:0.75rem 2.2rem;background:linear-gradient(135deg,rgba(184,134,11,0.15),rgba(184,134,11,0.08));border:1px solid rgba(184,134,11,0.45);color:var(--gold-light);font-family:'Cinzel',serif;font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;">Read the Chronicle →</button>`;
     }
   },1000);
 }
 
-async function triggerEnding(type){
+async function triggerEnding(){
   const cause=G.endCause||'';
   document.getElementById('end-notice')?.remove();
   setLoad(true);
-  let titleText,titleClass,epitaph,summaryNarrative;
+  let epitaph,summaryNarrative;
 
-  if(type==='golden'){
-    titleText='A Golden Age';titleClass='golden';
-    try{
-      const d=await ask(`${ctx()}
-${G.nation} has achieved a genuine golden age. Write its crowning epitaph: 2-3 sentences, luminous but not naive.
-Then write Jeremiah the Historian's summary — delivered in the style of a BBC documentary presenter standing in the ruins of a lost civilisation. Jeremiah speaks to what modern scholars would actually know: physical evidence (structures, burials, artefacts), written records if any, trade evidence, what survives and what doesn't. He speaks in first person plural — "we know", "we have found", "the evidence suggests", "what remains tells us". Never refers to himself by name. 3-4 sentences, no more. The tone is measured, expert, quietly moved.
-Consider: did this civilisation have permanent structures? Written language? Burial traditions? Trade networks? What physical traces would a golden age leave?
-Return:{"epitaph":"...","summaryNarrative":"..."}`);
-      epitaph=d.epitaph;summaryNarrative=d.summaryNarrative;
-    }catch(e){}
-  }else{
-    titleText='The Nation Falls';titleClass='fallen';
-    try{
-      const d=await ask(`${ctx()}
+  // Calculate legacy tier — Romans vs Picts
+  const yearsSpanned=G.yearNum-G.startYear;
+  const score=Math.round(G.peakScore*0.4 + (yearsSpanned/10)*0.3 + G.beat*2 + G.discoveries.length*4);
+  const legacyTier=
+    score>=120 ? 'immortal' :
+    score>=75  ? 'celebrated' :
+    score>=40  ? 'remembered' : 'forgotten';
+
+  const legacyInstructions={
+    immortal: `${G.nation} was an exceptional civilisation whose legacy endures. Jeremiah speaks as someone living inside what they built — their roads, their laws, their language, their gods still shape the world. "We are still living in what they made." Like Rome — not ruins, but living inheritance. 4-5 sentences.`,
+    celebrated: `${G.nation} was significant enough to shape what came after, but is now largely historical. Jeremiah references specific evidence of their influence — trade routes, architectural styles, religious ideas that spread — while acknowledging how much has been lost. Like the Greeks seen through Roman eyes. 3-4 sentences.`,
+    remembered: `${G.nation} left traces but not transformation. Jeremiah speaks about physical evidence — ruins, graves, artefacts — and honest uncertainty about their inner life. We know they were here. We know roughly what they did. The rest is interpretation. Like the Picts — present but partial. 3-4 sentences.`,
+    forgotten: `${G.nation} left almost nothing. Jeremiah is honest about the silence — a few shards, a name in a neighbouring culture's records, a burial site that may or may not be theirs. History swallowed them almost completely. 2-3 sentences, quietly devastating.`,
+  };
+
+  try{
+    const d=await ask(`${ctx()}
 CAUSE OF COLLAPSE: ${cause}
 FINAL HISTORY: ${G.history.slice(-3).join(' → ')}
-The nation of ${G.nation} has fallen due to: ${cause}. Write its final epitaph: 2-3 sentences, weighty and final. The epitaph must reflect the actual cause of collapse.
-Then write Jeremiah the Historian's summary — BBC documentary style, first person plural. Jeremiah should reference the cause of collapse specifically and what physical evidence modern scholars would find. 3-4 sentences.
-Return:{"epitaph":"...","summaryNarrative":"..."}`);
-      epitaph=d.epitaph;summaryNarrative=d.summaryNarrative;
-    }catch(e){}
-  }
+LEGACY TIER: ${legacyTier}
+DISCOVERIES MADE: ${G.discoveries.join(', ')||'none recorded'}
 
-  if(!epitaph)epitaph=type==='golden'
-    ?`${G.nation} reached heights few nations ever know.`
-    :`${G.nation} endured ${G.rulers.length} ruler${G.rulers.length!==1?'s':''} before history swallowed it.`;
+The nation of ${G.nation} has fallen. Write two things:
+1. A final epitaph — 2 sentences, weighty and specific to how they fell and what they were.
+2. Jeremiah the Historian's summary: ${legacyInstructions[legacyTier]}
+Jeremiah speaks in first person plural — "we know", "we have found", "the evidence suggests", "what remains tells us". He never refers to himself by name. BBC documentary tone — expert, measured, quietly moved. He references the discoveries and achievements specifically where relevant.
+Return:{"epitaph":"...","summaryNarrative":"..."}`);
+    epitaph=d.epitaph;summaryNarrative=d.summaryNarrative;
+  }catch(e){}
+
+  if(!epitaph)epitaph=`${G.nation} endured ${G.rulers.length} ruler${G.rulers.length!==1?'s':''} before history swallowed it.`;
   if(!summaryNarrative)summaryNarrative=G.history.slice(-5).join('. ')+'.';
 
-  // Save to Hall of Records
-  const yearsSpanned=G.yearNum-G.startYear;
-  const score=Math.round(G.peakScore*0.4 + (yearsSpanned/10)*0.3 + G.beat*2 + (type==='golden'?50:0));
   const rec={
-    nation:G.nation, type, score, years:yearsSpanned,
+    nation:G.nation, type:legacyTier, score, years:yearsSpanned,
     rulers:G.rulers.length, gens:G.gen+1, setting:G.setting,
     rulersList:G.rulers,
     discoveriesList:G.discoveries,
@@ -1438,8 +1428,9 @@ Return:{"epitaph":"...","summaryNarrative":"..."}`);
   setLoad(false);
 
   // Populate end screen
-  document.getElementById('end-title').textContent=titleText;
-  document.getElementById('end-title').className=`et2 ${titleClass}`;
+  const legacyTitles={immortal:'They Shaped the World',celebrated:'Their Legacy Endures',remembered:'Remembered',forgotten:'Lost to History'};
+  document.getElementById('end-title').textContent=legacyTitles[legacyTier]||'The Nation Falls';
+  document.getElementById('end-title').className=`et2 ${legacyTier==='immortal'||legacyTier==='celebrated'?'golden':'fallen'}`;
   document.getElementById('end-epi').textContent=epitaph;
   document.getElementById('sum-years').textContent=
     `Est. duration: ~${yearsSpanned} years. ${G.gen+1} known generation${G.gen!==0?'s':''}. ${G.rulers.length} named ruler${G.rulers.length!==1?'s':''}. Terminus: Year ${G.yearNum}.`;
