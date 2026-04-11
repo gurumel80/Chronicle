@@ -852,6 +852,7 @@ async function ask(prompt, attempt=1) {
       result = outer;
     }
   } catch(e) { result = {}; }
+  if (result.text) result.text = result.text.replace(/\bem(.*?)\/em\b/g, '<em>$1</em>').replace(/\bstrong(.*?)\/strong\b/g, '<strong>$1</strong>');
   return result;
 }
 
