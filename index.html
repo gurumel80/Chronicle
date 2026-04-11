@@ -134,8 +134,8 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 .end-btns{text-align:center;padding-bottom:3rem;display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;}
 
 /* ── OVERVIEW POPUP ── */
-#popup-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.85);z-index:800;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
-#popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(680px,96vw);max-height:88vh;background:linear-gradient(135deg,rgba(22,15,6,0.99),rgba(16,11,4,0.99));border:1px solid rgba(184,134,11,0.3);z-index:900;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
+#popup-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.98);z-index:1100;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
+#popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(680px,96vw);max-height:88vh;background:linear-gradient(135deg,rgba(22,15,6,0.99),rgba(16,11,4,0.99));border:1px solid rgba(184,134,11,0.3);z-index:1200;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
 @keyframes popIn{from{opacity:0;transform:translate(-50%,-52%)}to{opacity:1;transform:translate(-50%,-50%)}}
 .pop-head{padding:1.2rem 1.5rem 0.9rem;border-bottom:1px solid rgba(184,134,11,0.15);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .pop-title{font-family:'Cinzel',serif;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);opacity:0.7;}
@@ -179,8 +179,8 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 .etab-panel{display:none;}.etab-panel.active{display:block;}
 
 /* ── RECORD MODAL ── */
-#record-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.88);z-index:800;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
-#record-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(620px,92vw);max-height:88vh;background:linear-gradient(160deg,rgba(22,15,6,0.99),rgba(13,11,8,0.99));border:1px solid rgba(184,134,11,0.28);z-index:900;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
+#record-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.98);z-index:1100;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
+#record-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(620px,92vw);max-height:88vh;background:linear-gradient(160deg,rgba(22,15,6,0.99),rgba(13,11,8,0.99));border:1px solid rgba(184,134,11,0.28);z-index:1200;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
 .rec-head{padding:1.4rem 1.5rem 1rem;border-bottom:1px solid rgba(184,134,11,0.12);display:flex;align-items:flex-start;justify-content:space-between;flex-shrink:0;}
 .rec-head-left{flex:1;}
 .rec-nation{font-family:'Cinzel Decorative',serif;font-size:1.1rem;color:var(--gold);}
@@ -194,8 +194,8 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 .rec-years{font-size:0.82rem;color:var(--faded);font-style:italic;}
 .rec-summary{font-size:0.95rem;line-height:1.8;color:var(--parchment);opacity:0.85;}
 .rec-summary em{color:var(--gold-light);font-style:italic;}
-#htp-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.88);z-index:800;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
-#htp-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(620px,92vw);max-height:88vh;background:linear-gradient(160deg,rgba(22,15,6,0.99),rgba(13,11,8,0.99));border:1px solid rgba(184,134,11,0.28);z-index:900;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
+#htp-overlay{display:none;position:fixed;inset:0;background:rgba(5,4,2,0.98);z-index:1100;backdrop-filter:blur(3px);animation:fi 0.2s ease;}
+#htp-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(620px,92vw);max-height:88vh;background:linear-gradient(160deg,rgba(22,15,6,0.99),rgba(13,11,8,0.99));border:1px solid rgba(184,134,11,0.28);z-index:1200;display:flex;flex-direction:column;animation:popIn 0.25s ease;overflow:hidden;}
 .htp-head{padding:1.4rem 1.5rem 1rem;border-bottom:1px solid rgba(184,134,11,0.12);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .htp-head-title{font-family:'Cinzel',serif;font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--gold);opacity:0.75;}
 .htp-close{background:none;border:none;color:var(--faded);font-size:1.3rem;cursor:pointer;padding:0.2rem 0.4rem;transition:color 0.2s;line-height:1;}
