@@ -522,13 +522,13 @@ let G={
 // ═══════════════════════════════════
 const NAME_PARTS={
   nation:{
-    pre:['Val','Kel','Mor','Dun','Ash','Tor','Vel','Brak','Eld','Gor','Sev','Kath','Orm','Tal','Wyr','Hal','Ith','Ryn','Cor','Mal'],
-    mid:['drem','mor','ash','en','ith','vor','kar','an','el','on','us','ar','eth','or','un'],
-    suf:['','or','ia','ax','im','','ar','os','','ith','','ur','','an',''],
+    pre:['Val','Kel','Mor','Dun','Ash','Tor','Vel','Brak','Eld','Gor','Sev','Kath','Orm','Tal','Wyr','Hal','Ith','Ryn','Cor','Mal','Zor','Xan','Qir','Bel','Aet','Pyr','Syr','Vael','Khar','Zun','Oth','Jyr','Mhal','Kyth'],
+    mid:['drem','mor','ash','en','ith','vor','kar','an','el','on','us','ar','eth','or','un','al','os','az','yr','un','ias','em','ok','am','ol'],
+    suf:['','or','ia','ax','im','','ar','os','','ith','','ur','','an','','gard','heim','dun','vahl','thas','ra','ia','is','os','ium'],
   },
   ruler:{
-    first:['Edric','Varek','Solan','Mira','Thane','Lyra','Gorm','Kessa','Davan','Orla','Brek','Suri','Halvek','Nira','Corvath','Dese','Tyral','Emba','Wulfan','Cael'],
-    epithet:['the Stern','the Bold','the Pale','the Unyielding','Iron-hand','the Just','the Cruel','Long-tongue','the Patient','Twice-born','the Silent','the Younger','Stone-fist','the Learned','the Hungry','the Red','the Old','the Brief','the Cunning','the Forsaken'],
+    first:['Edric','Varek','Solan','Mira','Thane','Lyra','Gorm','Kessa','Davan','Orla','Brek','Suri','Halvek','Nira','Corvath','Dese','Tyral','Emba','Wulfan','Cael','Kaelen','Zora','Iskander','Thalia','Bane','Kael','Rhys','Elowen','Kaelith','Vorgon','Zaltor','Meryn','Sif','Hakon','Yara','Turok','Xal','Eris','Vaelen','Khor'],
+    epithet:['the Stern','the Bold','the Pale','the Unyielding','Iron-hand','the Just','the Cruel','Long-tongue','the Patient','Twice-born','the Silent','the Younger','Stone-fist','the Learned','the Hungry','the Red','the Old','the Brief','the Cunning','the Forsaken','the Relentless','the Devout','the Wise','the Mad','the Conqueror','the Builder','the Exile','the Shadow','the Golden','the Silver-tongued'],
   }
 };
 
@@ -828,6 +828,7 @@ const SYS=`You are the narrator of a mythic, gritty historical chronicle. Your w
 TONE: Write like a saga — immediate, visceral, gripping. Put the reader in the moment. Use concrete sensory details. Show consequences through human experience, not administrative summary. BAD: "The X clans disputed territorial claims." GOOD: "Three clans reached for the same river valley, and by summer two of them had burned." Short punchy sentences for violence and crisis. Longer flowing sentences for peace and prosperity. Every event should feel like it matters to real people.
 NEVER write dry summaries or administrative language. Chronicle what people did, felt, lost, won — not what committees decided.
 When you introduce a named character, include their gender ONLY in the newCharacters JSON field, never in the narrative text. Use established genders and pronouns consistently for all returning characters.
+NAMES: All names must be invented. Aim for phonetic variety — avoid common fantasy tropes. Some names should feel ancient and heavy, others quick and sharp. Ensure consistency in naming within a single lineage or culture.
 Reply ONLY in valid JSON, no preamble or markdown fences.`;
 
 
