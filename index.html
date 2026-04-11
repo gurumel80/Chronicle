@@ -16,7 +16,7 @@
 <script defer src="/_vercel/insights/script.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
 <style>
-:root{--gold:#b8860b;--gold-light:#d4a017;--blood:#7a1f1f;--faded:#8a7a60;--teal:#4a8a8a;--parchment:#f2e8d0;--glory:#c8a84b;--ink:#0d0b08;}
+:root{--gold:#b8860b;--gold-light:#d4a017;--blood:#7a1f1f;--faded:#8a7a60;--teal:#4a8a8a;--parchment:#f2e8d0;--glory:#c8a84b;--ink:#0d0b08;--emerald:#2d5a27;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',serif;min-height:100vh;overflow-x:hidden;}
 
@@ -68,10 +68,10 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 @keyframes pu{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(184,134,11,0.22)}}
 .sl2{font-family:'Cinzel',serif;font-size:0.4rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--faded);margin-bottom:0.1rem;}
 .sv2{font-family:'Cinzel',serif;font-size:0.75rem;color:var(--gold);}
-.sv2.danger{color:var(--blood);}
+.sv2.danger{color:var(--blood);}.sv2.success{color:var(--emerald);}
 .pr{display:flex;justify-content:center;gap:1.5px;margin-top:0.1rem;}
 .pip{width:4px;height:2px;background:rgba(184,134,11,0.1);transition:background 0.5s;}
-.pip.on{background:var(--gold);}.pip.on.danger{background:var(--blood);}
+.pip.on{background:var(--gold);}.pip.on.danger{background:var(--blood);}.pip.on.success{background:var(--emerald);}
 
 .mr{display:grid;grid-template-columns:1fr 1fr;gap:0.45rem;margin-bottom:1rem;}
 .mb{background:rgba(26,18,8,0.6);border:1px solid rgba(184,134,11,0.1);padding:0.65rem 0.85rem;}
@@ -148,10 +148,10 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 .pop-stat{background:rgba(26,18,8,0.8);border:1px solid rgba(184,134,11,0.12);padding:0.6rem 0.4rem;text-align:center;}
 .pop-stat-lbl{font-family:'Cinzel',serif;font-size:0.48rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faded);margin-bottom:0.2rem;}
 .pop-stat-val{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);}
-.pop-stat-val.danger{color:var(--blood);}
+.pop-stat-val.danger{color:var(--blood);}.pop-stat-val.success{color:var(--emerald);}
 .pop-pip-row{display:flex;justify-content:center;gap:2px;margin-top:0.2rem;}
 .pop-pip{width:5px;height:3px;background:rgba(184,134,11,0.1);}
-.pop-pip.on{background:var(--gold);}.pop-pip.on.danger{background:var(--blood);}
+.pop-pip.on{background:var(--gold);}.pop-pip.on.danger{background:var(--blood);}.pop-pip.on.success{background:var(--emerald);}
 .pop-chips{display:flex;flex-wrap:wrap;gap:0.3rem;}
 .pop-rch{font-size:0.78rem;padding:0.2rem 0.55rem;background:rgba(184,134,11,0.05);border:1px solid rgba(184,134,11,0.14);color:var(--faded);}
 .pop-rch.cur{border-color:rgba(184,134,11,0.4);color:var(--gold-light);}
@@ -290,6 +290,10 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
       <button class="pop-close" onclick="closePopup()">✕</button>
     </div>
     <div class="pop-body">
+      <div class="pop-sec" id="pop-narrative-sec">
+        <div class="pop-sec-t">The Chronicle So Far</div>
+        <div id="pop-narrative" style="font-size:0.92rem; line-height:1.7; color:var(--parchment); opacity:0.85; font-style:italic; padding-bottom: 0.5rem;"></div>
+      </div>
       <div class="pop-sec">
         <div class="pop-sec-t">Stats</div>
         <div class="pop-stats-grid" id="pop-stats"></div>
@@ -649,12 +653,12 @@ function buildUI(){
 }
 function renderAll(){STATS.forEach(s=>renderStat(s.key));}
 function renderStat(key){
-  const v=G.stats[key],danger=v<20;
+  const v=G.stats[key],danger=v<20,success=v>70;
   const el=document.getElementById(`sv-${key}`);
-  if(el){el.textContent=v;el.className=`sv2${danger?' danger':''}`;}
+  if(el){el.textContent=v;el.className=`sv2${danger?' danger':(success?' success':'')}`;}
   for(let i=0;i<10;i++){
     const p=document.getElementById(`pp-${key}-${i}`);
-    if(p){const on=v>=(i+1)*10;p.className=`pip${on?' on':''}${on&&danger?' danger':''}`;}
+    if(p){const on=v>=(i+1)*10;p.className=`pip${on?' on':''}${on&&danger?' danger':(on&&success?' success':'')}`;}
   }
 }
 function applyStats(changes,scale=1){
@@ -705,14 +709,25 @@ function closeHtp(e){
 // ═══════════════════════════════════
 // OVERVIEW POPUP
 // ═══════════════════════════════════
-function openPopup(){
+function openPopup() {
+  // Narrative Overview
+  const age = G.yearNum - G.startYear;
+  const pScore = prosperityScore();
+  const status = pScore > 65 ? "thriving" : pScore > 35 ? "enduring" : "struggling";
+  const parts = G.worldSeed.split(' — ');
+  const env = parts[0] || "the wild lands";
+  const soc = parts[1] || "simple traditions";
+  
+  const narrative = `The ${G.nation} civilisation live on the ${env} and their society is ${soc}. They have been a ${status} nation for ${age} years, currently ruled over by ${G.ruler} (${G.rulerStyle || 'ruling with an undefined hand'}), a lineage first established ${G.foundingType}.`;
+  document.getElementById('pop-narrative').textContent = narrative;
+
   // Populate stats
   const sg=document.getElementById('pop-stats');
   sg.innerHTML='';
   STATS.forEach(s=>{
-    const v=G.stats[s.key],danger=v<20;
+    const v=G.stats[s.key],danger=v<20,success=v>70;
     const d=document.createElement('div');d.className='pop-stat';
-    d.innerHTML=`<div class="pop-stat-lbl">${s.label}</div><div class="pop-stat-val${danger?' danger':''}">${v}</div><div class="pop-pip-row">${Array.from({length:10},(_,i)=>{const on=v>=(i+1)*10;return`<div class="pop-pip${on?' on':''}${on&&danger?' danger':''}"></div>`;}).join('')}</div>`;
+    d.innerHTML=`<div class="pop-stat-lbl">${s.label}</div><div class="pop-stat-val${danger?' danger':(success?' success':'')}">${v}</div><div class="pop-pip-row">${Array.from({length:10},(_,i)=>{const on=v>=(i+1)*10;return`<div class="pop-pip${on?' on':''}${on&&danger?' danger':(on&&success?' success':'')}"></div>`;}).join('')}</div>`;
     sg.appendChild(d);
   });
   // Rulers
