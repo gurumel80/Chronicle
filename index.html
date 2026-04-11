@@ -831,7 +831,7 @@ When you introduce a named character, include their gender ONLY in the newCharac
 Reply ONLY in valid JSON, no preamble or markdown fences.`;
 
 
-async function ask(prompt) {
+async function ask(prompt, attempt=1) {
   const r = await fetch('/api/generate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -839,6 +839,7 @@ async function ask(prompt) {
   });
   if (!r.ok) {
     const err = await r.json().catch(() => ({}));
+    if(attempt < 2) return ask(prompt, attempt+1);
     throw new Error(`[API Error] ${err?.error || r.status}`); // Returns 504 if Vercel times out
   }
   const data = await r.json();
@@ -853,16 +854,16 @@ return result;
 }
 
 function ctx(){
-  const genderNotes=Object.entries(G.characters).map(([n,g])=>`${n}:${g}`).join(',');
+  const genderNotes=Object.entries(G.characters).slice(-10).map(([n,g])=>`${n}:${g}`).join(',');
   const legacyStr=G.legacyTraits.length?G.legacyTraits.join(', '):'none';
   return `NATION:${G.nation}|SETTING:${G.setting}|RULER:${G.ruler}|RULER STYLE:${G.rulerStyle||'unknown — first reign'}|ALL RULERS:${G.rulers.join(',')}|YEAR:${G.yearNum}
 STATS:Military ${G.stats.military},Population ${G.stats.population},Wealth ${G.stats.wealth},Culture ${G.stats.culture},Territory ${G.stats.territory},Technology ${G.stats.technology},Stability ${G.stats.stability},Legitimacy ${G.stats.legitimacy}
 DISCOVERIES:${G.discoveries.join(',')||'none'}|ALLIES:${G.allies.join(',')||'none'}|ENEMIES:${G.enemies.join(',')||'none'}
 LEGACY TRAITS FROM PAST RULERS:${legacyStr}
-HISTORY:${G.history.slice(-5).join(' > ')}
-ANTI-FIXATION: Do not repeat or over-reference the same cultural theme, belief, landscape feature or practice in consecutive events. The world seed established the starting point — the story has moved on from there. Vary what you focus on.
+  HISTORY:${G.history.slice(-3).join(' > ')}
+  VARY: Avoid repeating the same themes, landscape or practices in consecutive events.
 NAMED CHARACTERS (gender register — use consistently):${genderNotes||'none yet'}
-REMINDER: All names must be entirely fictional. No real-world references. Use RULER STYLE to shape how events unfold under this ruler.`;
+  All names fictional. Use RULER STYLE to shape events.`;
 }
 
 // ═══════════════════════════════════
