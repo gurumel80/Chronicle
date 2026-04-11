@@ -837,10 +837,14 @@ async function ask(prompt) {
   });
   if (!r.ok) {
     const err = await r.json().catch(() => ({}));
-    throw new Error(`[API Error] ${err?.error || r.status}`);
+    throw new Error(`[API Error] ${err?.error || r.status}`); // Returns 504 if Vercel times out
   }
   const data = await r.json();
-  let raw = (data.text || '{}').replace(/```json|```/g, '').trim();
+  let raw = (data.text || '{}').trim();
+  // Robust JSON extraction: finds the first { and last } to ignore preambles or markdown fences
+  const start = raw.indexOf('{');
+  const end = raw.lastIndexOf('}');
+  if (start !== -1 && end !== -1) raw = raw.substring(start, end + 1);
   return JSON.parse(raw);
 }
 
@@ -1080,6 +1084,8 @@ async function nextBeat(){
       msg = `The Chronicle falters: ${e.message.replace('[Gemini Error]', '').trim()}`;
     } else if (e.message.includes('401') || e.message.includes('Authentication')) {
       msg = 'API key error — check your key is correct via the link below.';
+    } else if (e.message.includes('504') || e.message.includes('502')) {
+      msg = 'The Chronicle is slow to respond (Vercel Timeout). The years pass in silence; try the next beat.';
     }
     addEntry(msg);
   }
