@@ -94,7 +94,7 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 @keyframes si{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .ey{font-family:'Cinzel',serif;font-size:0.58rem;letter-spacing:0.18em;color:var(--gold);opacity:0.62;margin-bottom:0.4rem;text-transform:uppercase;}
 .ex{font-size:1.15rem;line-height:1.86;color:var(--parchment);opacity:0.9;}
-@media(max-width:600px){.ex{font-size:1.25rem;line-height:1.92;}}
+@media(max-width:600px){.ex{font-size:1.15rem;line-height:1.92;}}
 .ex em{color:var(--gold-light);font-style:italic;}
 .sc{display:flex;gap:0.38rem;flex-wrap:wrap;margin-top:0.65rem;}
 .chip{font-family:'Cinzel',serif;font-size:0.55rem;letter-spacing:0.07em;padding:0.16rem 0.42rem;text-transform:uppercase;}
@@ -214,6 +214,7 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 
 /* ── FLOATING DASHBOARD (LAPTOP & DESKTOP) ── */
 @media (min-width: 1024px) {
+  #mobile-ov-btn { display: none; }
   #app {
     max-width: 1300px;
     padding: 2rem 4rem 2rem 340px; /* Large left padding to clear floating sidebar */
@@ -266,6 +267,9 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
 /* ── MOBILE PADDING ADJUSTMENT ── */
 @media (max-width: 1023px) {
   #app { padding-top: 110px; } /* Create space for the top floating bar */
+  #is { display: flex; flex-direction: column; gap: 0.4rem; }
+  .ey { font-size: 0.75rem; color: rgba(184,134,11,0.85); }
+  .ct { font-size: 0.78rem; opacity: 1; }
 }
 
 /* ── TABLET / MID-SIZE ADJUSTMENTS ── */
@@ -420,7 +424,7 @@ body{background:var(--ink);color:var(--parchment);font-family:'IM Fell English',
   <!-- GAME -->
   <div id="game">
     <div class="nh"><div class="nn" id="dnn"></div><div class="era" id="der"></div></div>
-    <div id="is"><div class="sg" id="sg1"></div><div class="sg" id="sg2"></div></div>
+    <div id="is"><div class="sg" id="sg1"></div><div class="sg" id="sg2"></div><button id="mobile-ov-btn" class="btn-ov" onclick="openPopup()" style="margin: 0 auto; display: block;">◈ Overview</button></div>
     <div class="mr">
       <div class="mb"><div class="mt">Line of Rulers</div><div class="cr2" id="rl"></div></div>
       <div class="mb"><div class="mt">Discoveries &amp; Achievements</div><div class="cr2" id="db"></div></div>
