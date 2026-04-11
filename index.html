@@ -843,22 +843,15 @@ async function ask(prompt, attempt=1) {
     throw new Error(`[API Error] ${err?.error || r.status}`); // Returns 504 if Vercel times out
   }
   const data = await r.json();
-  let raw = (data.text || '{}').trim();
-  // Unwrap double-wrapped responses
+  let result;
   try {
-    const outer = JSON.parse(raw);
-    if (typeof outer.text === 'string' && outer.text.trim().startsWith('{')) {
-      const start = outer.text.indexOf('{');
-      const end = outer.text.lastIndexOf('}');
-      raw = outer.text.substring(start, end + 1);
+    const outer = JSON.parse(data.text || '{}');
+    if (typeof outer.text === 'string' && outer.text.includes('"text"')) {
+      try { result = JSON.parse(outer.text); } catch(e) { result = outer; }
     } else {
-      raw = JSON.stringify(outer);
+      result = outer;
     }
-  } catch(e) {}
-  const start = raw.indexOf('{');
-  const end = raw.lastIndexOf('}');
-  if (start !== -1 && end !== -1) raw = raw.substring(start, end + 1);
-  const result = JSON.parse(raw);
+  } catch(e) { result = {}; }
   if (result.text) result.text = result.text.replace(/<([^>]+)>/g, '$1');
   return result;
 }
