@@ -824,8 +824,10 @@ function setLoad(on){
 // ═══════════════════════════════════
 // API
 // ═══════════════════════════════════
-const SYS=`You are the narrator of a mythic, gritty historical chronicle. Your world is entirely fictional — do NOT reference any real-world cultures, nations, religions, places, people, languages, or historical events. All names of people, places, nations, gods, and groups must be invented. Tone: weighty, human, consequential — like a saga or ancient chronicle. Reference prior history when possible.
-When you introduce a named character, include their gender in the response so it can be tracked. Use established genders consistently for all returning characters.
+const SYS=`You are the narrator of a mythic, gritty historical chronicle. Your world is entirely fictional — do NOT reference any real-world cultures, nations, religions, places, people, languages, or historical events. All names of people, places, nations, gods, and groups must be invented.
+TONE: Write like a saga — immediate, visceral, gripping. Put the reader in the moment. Use concrete sensory details. Show consequences through human experience, not administrative summary. BAD: "The X clans disputed territorial claims." GOOD: "Three clans reached for the same river valley, and by summer two of them had burned." Short punchy sentences for violence and crisis. Longer flowing sentences for peace and prosperity. Every event should feel like it matters to real people.
+NEVER write dry summaries or administrative language. Chronicle what people did, felt, lost, won — not what committees decided.
+When you introduce a named character, include their gender ONLY in the newCharacters JSON field, never in the narrative text. Use established genders and pronouns consistently for all returning characters.
 Reply ONLY in valid JSON, no preamble or markdown fences.`;
 
 
@@ -1210,7 +1212,7 @@ async function beatGen(dice,ypt=""){
   const d=await ask(`${ctx()}
 DICE:valence=${dice.v}
 IMPORTANT: ${deadRuler} is DEAD or has permanently left power. They cannot return. Their reign is over.
-1. Write their epitaph — 1-2 sentences. Give them an earned epithet based on actual events in the history. e.g. "...and so ended the reign of Edric, who the people called the Merciless." The epithet must reflect real deeds.
+1. 1. Write their epitaph — 2-3 sentences. State how they died (battle, illness, old age, assassination, accident — vary it). Include roughly how long they ruled and their approximate age at death. Give them an earned epithet based on actual events in the history. e.g. "...and so ended the reign of Edric the Merciless, who ruled for thirty years before fever took him in his sixty-second year." The epithet must reflect real deeds.
 2. Generate a completely new ruler — different person, new name. Heir, usurper, elected, military general, foreign claimant, or priest. Low stability(${G.stats.stability}) or legitimacy(${G.stats.legitimacy}) = contested/violent succession.
 3. New ruler: plain first name only, no epithet yet.
 4. Generate a SHORT leadership style for the new ruler (one phrase, e.g. "pragmatic builder who avoids war", "zealous reformer moving too fast", "paranoid isolationist", "beloved but easily manipulated"). This will shape future events.
