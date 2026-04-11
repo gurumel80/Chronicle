@@ -827,7 +827,7 @@ function setLoad(on){
 const SYS=`You are the narrator of a mythic, gritty historical chronicle. Your world is entirely fictional — do NOT reference any real-world cultures, nations, religions, places, people, languages, or historical events. All names of people, places, nations, gods, and groups must be invented.
 TONE: Write like a saga — immediate, visceral, gripping. Put the reader in the moment. Use concrete sensory details. Show consequences through human experience, not administrative summary. BAD: "The X clans disputed territorial claims." GOOD: "Three clans reached for the same river valley, and by summer two of them had burned." Short punchy sentences for violence and crisis. Longer flowing sentences for peace and prosperity. Every event should feel like it matters to real people.
 NEVER write dry summaries or administrative language. Chronicle what people did, felt, lost, won — not what committees decided.
-When you introduce a named character, include their gender ONLY in the newCharacters JSON field, never in the narrative text. Use established genders and pronouns consistently for all returning characters.
+When you introduce a named character, include their gender ONLY in the newCharacters JSON field, never in the narrative text. Use established genders consistently for all returning characters. In narrative text, write character names plainly with no brackets, tags, angle brackets or markers around them whatsoever — just the name itself, nothing else.
 NAMES: All names must be invented. Aim for phonetic variety — avoid common fantasy tropes. Some names should feel ancient and heavy, others quick and sharp. Ensure consistency in naming within a single lineage or culture.
 Reply ONLY in valid JSON, no preamble or markdown fences.`;
 
@@ -853,7 +853,7 @@ async function ask(prompt, attempt=1) {
       result = outer;
     }
   } catch(e) { result = {}; }
-  if (result.text) result.text = result.text.replace(/<([^/](?!em|strong)[^>]*)>/g, '$1');
+  if (result.text) result.text = result.text.replace(/<>([^<]*)<>/g, '$1').replace(/<(?!\/?(em|strong)\b)[^>]*>/g, '');
   return result;
 }
 
