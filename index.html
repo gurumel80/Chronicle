@@ -853,7 +853,7 @@ async function ask(prompt, attempt=1) {
       result = outer;
     }
   } catch(e) { result = {}; }
-  if (result.text) result.text = result.text.replace(/\bem(.*?)\/em\b/g, '<em>$1</em>').replace(/\bstrong(.*?)\/strong\b/g, '<strong>$1</strong>');
+  if (result.text) result.text = result.text.replace(/<>\s*(.*?)\s*<>/g, '<em>$1</em>').replace(/\bem(.*?)\/em\b/g, '<em>$1</em>').replace(/\bstrong(.*?)\/strong\b/g, '<strong>$1</strong>');
   return result;
 }
 
@@ -1028,7 +1028,7 @@ If the founding involves prophecy, do NOT use skin markings, birthmarks or tatto
 Do not default to mining or metalwork unless the world seed specifically suggests it.
 Tone: grounded, clear, confident. Not flowery. The beauty comes from the specifics, not the language.
 All names invented. No real-world references.
-Return:{"text":"...","rulerStyle":"one phrase leadership style for ${ruler}","statChanges":[],"discovery":null,"historySummary":"brief phrase","newCharacters":{"${ruler}":"m or f or ?"}}`);
+Return:{"text":"2 sentences on the land and lead-in, italicising names with <em>tags</em>","rulerStyle":"one phrase leadership style for ${ruler}","statChanges":[],"discovery":null,"historySummary":"brief phrase","newCharacters":{"${ruler}":"m or f or ?"}}`);
     addEntry(d.text||`<em>${nation}</em> rises. ${ruler} stands at the threshold of history.`,'major');
     if(d.rulerStyle)G.rulerStyle=d.rulerStyle;
     if(d.discovery)addDisc(d.discovery);
@@ -1136,7 +1136,7 @@ DICE:significance=${dice.sl},valence=${dice.v},adjective="${dice.adj}"${choiceCt
 EVENT CATEGORY: ${ec.cat}
 Generate a ${dice.adj} ${ec.cat} event. Stat changes should primarily affect: ${ec.stats}. Be specific — name people and places with invented names. Scale matches significance (${dice.sl}).
 IMPORTANT: Do NOT default to mining or ironworking unless the history specifically establishes it. This world has many dimensions.
-Return:{"text":"2-3 vivid sentences surrounding names with <em> and </em> tags","statChanges":[{"stat":"...","delta":N}],"discovery":null,"newAlly":null,"newEnemy":null,"historySummary":"one plain factual phrase — what happened, not how it felt (e.g. 'eastern border war lost' not 'the blood-soaked fields of Kethros claimed a generation')","newCharacters":{"Name":"m or f or ?"}}
+Return:{"text":"2-3 vivid sentences italicising names with <em>tags</em>","statChanges":[{"stat":"...","delta":N}],"discovery":null,"newAlly":null,"newEnemy":null,"historySummary":"one plain factual phrase — what happened, not how it felt (e.g. 'eastern border war lost' not 'the blood-soaked fields of Kethros claimed a generation')","newCharacters":{"Name":"m or f or ?"}}
 Valid stats:military,population,wealth,culture,territory,technology,stability,legitimacy. Deltas -15 to +15.`);
   const chips=applyStats(d.statChanges,dice.ss);
   addEntry(d.text||'The years passed in quiet toil.','',chips,ypt,chips);
@@ -1166,7 +1166,7 @@ async function beatDetail(dice,ypt=""){
 Generate a small, human-scale chronicle detail: ${pick}.
 This is a texture beat — not a major event. 1-2 sentences, specific and vivid. Name people with invented names. No real-world references.
 It may move one stat very slightly (delta -5 to +5) or none at all.
-Return:{"text":"1-2 vivid sentences surrounding names with <em> and </em> tags","statChanges":[{"stat":"...","delta":N}],"historySummary":"brief phrase","newCharacters":{"Name":"m or f or ?"}}`);
+Return:{"text":"1-2 vivid sentences italicising names with <em>tags</em>","statChanges":[{"stat":"...","delta":N}],"historySummary":"brief phrase","newCharacters":{"Name":"m or f or ?"}}`);
   const chips=applyStats(d.statChanges||[],0.8);
   addEntry(d.text||'The years brought quiet change.','',chips,ypt,chips);
   if(d.historySummary)G.history.push(d.historySummary);
@@ -1190,7 +1190,7 @@ DICE:significance=${dice.sl},adjective="${dice.adj}"
 DISASTER TYPE: ${dt.type}
 Generate a ${dice.adj} ${dt.type}. Brutal but human — show cost in lives and choices. Invented names only.
 Stat changes must primarily affect: ${dt.stats}. At least one stat must drop -15 or worse before multiplier.
-Return:{"text":"3-4 weighty sentences surrounding names with <em> and </em> tags","statChanges":[{"stat":"...","delta":N}],"historySummary":"brief phrase"}
+Return:{"text":"3-4 weighty sentences italicising names with <em>tags</em>","statChanges":[{"stat":"...","delta":N}],"historySummary":"brief phrase"}
 Valid:military,population,wealth,culture,territory,technology,stability,legitimacy.`);
   const chips=applyStats(d.statChanges,dice.ss);
   addEntry(d.text||'Catastrophe fell upon the land.','major',chips,ypt,chips);
@@ -1349,7 +1349,7 @@ CAUSE OF COLLAPSE: ${cause}
 This is the final chronicle entry. The nation of ${G.nation} has just fallen — right now, in this moment.
 Write 2-3 sentences describing the exact final moments. What happened? Who was there? What did it look like? Be specific — name people, places, the immediate cause. This should feel like witnessing the end, not summarising it.
 Do NOT write "the nation fell" or anything abstract. Write what a person standing there would have seen.
-Return:{"text":"2-3 vivid sentences surrounding names with <em> and </em> tags"}`);
+Return:{"text":"2-3 vivid sentences italicising names with <em>tags</em>"}`);
       if(d.text) addEntry(d.text,'major');
     }catch(e){}
     setLoad(false);
